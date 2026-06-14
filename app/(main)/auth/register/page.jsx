@@ -4,7 +4,10 @@ import { Eye, EyeOff, TrendingUp, Shield, DollarSign, Zap, CheckCircle, XCircle,
 import Link from 'next/link';
 
 export default function Page() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [referCode, setReferCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +85,42 @@ export default function Page() {
           </div>
 
           <div className="space-y-6">
+            {/* Name Input */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-emerald-300 mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-white placeholder-gray-500 backdrop-blur-sm"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-emerald-300 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-white placeholder-gray-500 backdrop-blur-sm"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
             {/* Phone Number Input */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-emerald-300 mb-2">
@@ -100,6 +139,23 @@ export default function Page() {
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <div className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></div>
                 </div>
+              </div>
+            </div>
+
+            {/* Refer Code Input */}
+            <div>
+              <label htmlFor="referCode" className="block text-sm font-medium text-emerald-300 mb-2">
+                Referral Code (Optional)
+              </label>
+              <div className="relative">
+                <input
+                  id="referCode"
+                  type="text"
+                  className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-white placeholder-gray-500 backdrop-blur-sm"
+                  placeholder="Enter referral code"
+                  value={referCode}
+                  onChange={(e) => setReferCode(e.target.value)}
+                />
               </div>
             </div>
 
