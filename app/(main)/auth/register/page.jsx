@@ -2,13 +2,15 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, TrendingUp, Shield, DollarSign, Zap, CheckCircle, XCircle, Phone, Lock } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/components/AuthProvider';
 import toast from 'react-hot-toast';
 
 export default function Page() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const { register } = useAuth();
+  const { register, supabase } = useAuth();
+  const router = useRouter();
   const [referCode, setReferCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,8 +31,18 @@ export default function Page() {
   const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
   const passwordsMatch = password === confirmPassword && confirmPassword !== '';
 
+  const isValidReferralFormat = (code) => {
+    if (!code) return true; // It's optional
+    return /^LGX-REF-[A-Z0-9]{6}$/i.test(code.trim());
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (referCode && !isValidReferralFormat(referCode)) {
+      toast.error('Invalid referral code format. It should look like LGX-REF-XXXXXX');
+      return;
+    }
     
     if (!isPasswordValid) {
       toast.error('Please ensure your password meets all requirements');
@@ -48,9 +60,21 @@ export default function Page() {
     }
     
     setIsLoading(true);
+
+    if (referCode) {
+      const { data: codeExists, error: rpcError } = await supabase.rpc('check_referral_code_exists', { code_to_check: referCode.trim().toUpperCase() });
+      if (rpcError || !codeExists) {
+        setIsLoading(false);
+        toast.error("This referral code does not exist.");
+        return;
+      }
+    }
     
     try {
-      const data = await register(email, password, { full_name: name, refer_code: referCode });
+      const data = await register(email, password, { 
+        full_name: name, 
+        refer_code: referCode ? referCode.trim().toUpperCase() : null 
+      });
       
       // Supabase prevents email enumeration by returning success even if the email exists.
       // We can detect an existing email if the returned user has an empty identities array.
@@ -60,8 +84,15 @@ export default function Page() {
         return;
       }
 
-      toast.success('Registration successful! Please check your email to verify your account.');
-      setIsLoading(false);
+      if (data?.session) {
+        // Email confirmation is turned OFF in Supabase
+        toast.success('Registration successful! Redirecting to dashboard...');
+        router.push('/dashboard/profile');
+      } else {
+        // Email confirmation is turned ON
+        toast.success('Registration successful! Please check your email to verify your account.');
+        setIsLoading(false);
+      }
     } catch (err) {
       // Fallback for explicit errors
       toast.error(err.message || 'Failed to create account');

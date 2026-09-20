@@ -80,7 +80,7 @@ export default function SubscriptionPage() {
   };
 
   return (
-    <div className="space-y-8 animate-fadeInUp px-4 lg:px-8 max-w-7xl mx-auto pb-10 mt-6 lg:mt-0">
+    <div className="space-y-8 animate-fadeInUp pb-10 mt-6 lg:mt-0">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-12">
         <h1 className="text-3xl font-bold text-white mb-4">Choose Your Subscription</h1>

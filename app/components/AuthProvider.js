@@ -76,6 +76,7 @@ export function AuthProvider({ children }) {
       setLoading(false);
       throw error;
     }
+    setLoading(false);
     // Return data so UI can handle success state
     return data;
   };

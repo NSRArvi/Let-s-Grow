@@ -50,7 +50,9 @@ export default function ProfilePage() {
     docType: "Passport",
     docFiles: [],
     isVerified: false,
-    joinedAt: null,
+    joinedAt: "",
+    referralCode: "",
+    referredBy: "",
   });
 
   const [formData, setFormData] = useState({ ...userData });
@@ -104,6 +106,8 @@ export default function ProfilePage() {
         docFiles: data.identity_documents || [],
         isVerified: data.is_verified || false,
         joinedAt: data.created_at || user.created_at,
+        referralCode: data.referral_code || "",
+        referredBy: data.referred_by || "",
       };
 
       setUserData(newUserData);
@@ -173,6 +177,11 @@ export default function ProfilePage() {
     }));
   };
 
+  const isValidReferralFormat = (code) => {
+    if (!code) return true;
+    return /^LGX-REF-[A-Z0-9]{6}$/i.test(code.trim());
+  };
+
   const handleSave = async () => {
     if (
       !formData.name ||
@@ -189,7 +198,27 @@ export default function ProfilePage() {
       return;
     }
 
+    if (formData.referredBy && !isValidReferralFormat(formData.referredBy)) {
+      toast.error("Invalid referral code format. It should look like LGX-REF-XXXXXX");
+      return;
+    }
+
+    if (formData.referredBy && formData.referredBy.toUpperCase() === userData.referralCode) {
+      toast.error("You cannot use your own referral code.");
+      return;
+    }
+
     setIsLoading(true);
+
+    if (formData.referredBy) {
+      const { data: codeExists, error: rpcError } = await supabase.rpc('check_referral_code_exists', { code_to_check: formData.referredBy.toUpperCase() });
+      if (rpcError || !codeExists) {
+        setIsLoading(false);
+        toast.error("This referral code does not exist.");
+        return;
+      }
+    }
+    
     try {
       const { error } = await supabase.from("profiles").upsert({
         id: user.id,
@@ -200,6 +229,7 @@ export default function ProfilePage() {
         gender: formData.sex,
         country: formData.country,
         identity_documents: formData.docFiles,
+        referred_by: userData.referredBy ? userData.referredBy : (formData.referredBy ? formData.referredBy.toUpperCase() : null),
       });
 
       if (error) throw error;
@@ -232,7 +262,7 @@ export default function ProfilePage() {
   const maxDateString = maxDate.toISOString().split("T")[0];
 
   return (
-    <div className="space-y-8 animate-fadeInUp px-4 lg:px-8 max-w-5xl mx-auto pb-10 mt-6 lg:mt-0">
+    <div className="space-y-8 animate-fadeInUp pb-10 mt-6 lg:mt-0">
       {/* Header */}
       <div className="flex justify-between md:items-center gap-4">
         <h1 className="text-3xl font-bold text-white">Profile</h1>
@@ -309,6 +339,22 @@ export default function ProfilePage() {
                 <span className="text-sm">Joined {formattedDate}</span>
               </div>
             </div>
+
+            {/* My Referral Code */}
+            {userData.referralCode && (
+              <div className="w-full pt-6 mt-4 border-t border-emerald-500/10">
+                <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider text-left">Your Referral Code</p>
+                <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-lg p-3 flex justify-between items-center group cursor-copy hover:bg-emerald-900/40 transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(userData.referralCode);
+                    toast.success("Referral code copied!");
+                  }}
+                >
+                   <span className="text-emerald-300 font-mono font-bold tracking-widest">{userData.referralCode}</span>
+                   <span className="text-xs text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity">Copy</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -336,6 +382,27 @@ export default function ProfilePage() {
                     isEditing
                       ? "bg-gray-900/80 border border-emerald-500/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       : "bg-gray-900/50 border border-gray-800"
+                  }`}
+                />
+              </div>
+
+              {/* Referred By */}
+              <div>
+                <label className="block text-sm font-medium text-emerald-300 mb-1 flex items-center justify-between">
+                  <span>Referred By</span>
+                  {userData.referredBy && <span className="text-xs text-gray-400">Locked</span>}
+                </label>
+                <input
+                  type="text"
+                  name="referredBy"
+                  value={isEditing ? formData.referredBy : userData.referredBy}
+                  onChange={handleInputChange}
+                  disabled={!isEditing || !!userData.referredBy}
+                  placeholder={userData.referredBy ? "" : "Optional referral code"}
+                  className={`w-full px-4 py-2.5 rounded-lg text-white transition-colors ${
+                    !isEditing || !!userData.referredBy
+                      ? "bg-gray-900/50 border border-gray-800 opacity-70 cursor-not-allowed"
+                      : "bg-gray-900/80 border border-emerald-500/50 focus:ring-2 focus:ring-emerald-500 focus:outline-none uppercase"
                   }`}
                 />
               </div>

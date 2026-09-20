@@ -118,7 +118,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-10 animate-fadeInUp px-4 lg:px-8">
+    <div className="space-y-10 animate-fadeInUp">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <h1 className="text-3xl font-bold text-white">Overview</h1>

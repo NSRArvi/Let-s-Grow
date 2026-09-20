@@ -26,7 +26,7 @@ export default function WalletPage() {
     };
 
     return (
-        <div className="space-y-10 animate-fadeInUp px-4 lg:px-8">
+        <div className="space-y-10 animate-fadeInUp">
             <h1 className="text-3xl font-bold text-white">Wallet</h1>
             <p className="text-gray-400 text-sm mb-6">Manage your wallet, add funds or withdraw anytime.</p>
 
