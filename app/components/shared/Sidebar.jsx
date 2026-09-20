@@ -14,6 +14,7 @@ import {
   Users,
   Package2,
 } from "lucide-react";
+import { useAuth } from "../AuthProvider";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: Home },
@@ -29,6 +30,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -73,14 +75,16 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="mt-10 pt-6 border-t border-emerald-500/10">
-        <Link
-          href="/"
-          onClick={() => setIsOpen(false)} // Close mobile menu on click
-          className="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all group text-red-300 hover:bg-red-500/10 hover:text-white"
+        <button
+          onClick={() => {
+            setIsOpen(false);
+            logout();
+          }}
+          className="flex w-full items-center px-4 py-3 rounded-lg text-sm font-medium transition-all group text-red-300 hover:bg-red-500/10 hover:text-white"
         >
           <X className="w-4 h-4 mr-3 text-red-400 group-hover:text-white" />
           Logout
-        </Link>
+        </button>
       </div>
     </div>
   );

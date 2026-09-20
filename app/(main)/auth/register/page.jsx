@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, TrendingUp, Shield, DollarSign, Zap, CheckCircle, XCircle, Phone, Lock } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/app/components/AuthProvider';
+import toast from 'react-hot-toast';
 
 export default function Page() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const { register } = useAuth();
   const [referCode, setReferCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,27 +33,40 @@ export default function Page() {
     e.preventDefault();
     
     if (!isPasswordValid) {
-      alert('Please ensure your password meets all requirements');
+      toast.error('Please ensure your password meets all requirements');
       return;
     }
     
     if (!passwordsMatch) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     
     if (!agreedToTerms) {
-      alert('Please agree to the terms and conditions');
+      toast.error('Please agree to the terms and conditions');
       return;
     }
     
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const data = await register(email, password, { full_name: name, refer_code: referCode });
+      
+      // Supabase prevents email enumeration by returning success even if the email exists.
+      // We can detect an existing email if the returned user has an empty identities array.
+      if (data?.user?.identities?.length === 0) {
+        toast.error('This email is already registered. Please sign in instead.');
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success('Registration successful! Please check your email to verify your account.');
       setIsLoading(false);
-      alert('Registration successful! (This would redirect to verification)');
-    }, 2000);
+    } catch (err) {
+      // Fallback for explicit errors
+      toast.error(err.message || 'Failed to create account');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -118,27 +133,6 @@ export default function Page() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </div>
-            </div>
-
-            {/* Phone Number Input */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-emerald-300 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <input
-                  id="phone"
-                  type="tel"
-                  required
-                  className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-white placeholder-gray-500 backdrop-blur-sm"
-                  placeholder="Enter your phone number"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <div className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                </div>
               </div>
             </div>
 

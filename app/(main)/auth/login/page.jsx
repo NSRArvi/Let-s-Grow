@@ -2,22 +2,31 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, TrendingUp, Shield, DollarSign, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/app/components/AuthProvider';
+import toast from 'react-hot-toast';
 
 export default function Page() {
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await login(email, password);
+      // Redirection is handled in the AuthProvider
+    } catch (err) {
+      if (err.message.includes('Invalid login credentials')) {
+        toast.error('Invalid email or password.');
+      } else {
+        toast.error(err.message || 'Failed to sign in');
+      }
       setIsLoading(false);
-      alert('Login functionality would be implemented here');
-    }, 1500);
+    }
   };
 
   return (
@@ -51,20 +60,20 @@ export default function Page() {
           </div>
 
           <div className="space-y-6">
-            {/* Phone Number Input */}
+            {/* Email Input */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-emerald-300 mb-2">
-                Phone Number
+              <label htmlFor="email" className="block text-sm font-medium text-emerald-300 mb-2">
+                Email Address
               </label>
               <div className="relative">
                 <input
-                  id="phone"
-                  type="tel"
+                  id="email"
+                  type="email"
                   required
                   className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-white placeholder-gray-500 backdrop-blur-sm"
-                  placeholder="Enter your phone number"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                   <div className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></div>
