@@ -20,6 +20,7 @@ import {
   Trophy,
 } from 'lucide-react'
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function LearnPage() {
   const [activeStep, setActiveStep] = useState(0)
@@ -31,21 +32,21 @@ export default function LearnPage() {
       title: 'You Invest',
       desc: 'Choose a product package and invest the desired amount securely through our platform.',
       detail: 'Start with as little as $100 and watch your money work for you',
-      color: 'from-emerald-500 to-green-500',
+      color: 'bg-emerald-50 text-[#10B981]',
     },
     {
       icon: Banknote,
       title: 'We Deploy Capital',
       desc: 'We loan your funds to vetted entrepreneurs who buy, market, and sell actual products.',
       detail: 'Your investment fuels real businesses with proven track records',
-      color: 'from-emerald-600 to-lime-500',
+      color: 'bg-blue-50 text-[#2563EB]',
     },
     {
       icon: TrendingUp,
       title: 'You Earn Returns',
       desc: 'After the selling cycle, profits are shared back with you—transparently and on time.',
       detail: 'Enjoy consistent returns with full transparency on every transaction',
-      color: 'from-green-500 to-emerald-400',
+      color: 'bg-amber-50 text-[#F59E0B]',
     },
   ]
 
@@ -55,29 +56,32 @@ export default function LearnPage() {
       title: 'Bank-Level Security',
       desc: '256-bit encryption, multi-factor authentication, and regulatory compliance protect your investment.',
       stat: '99.9% Uptime',
-      color: 'text-emerald-400',
+      color: 'text-[#10B981]',
+      bg: 'bg-emerald-50',
     },
     {
       icon: BarChart3,
       title: 'Real-Time Analytics',
       desc: 'Track every penny with live dashboards, detailed reports, and performance metrics.',
       stat: '24/7 Monitoring',
-      color: 'text-green-400',
+      color: 'text-[#2563EB]',
+      bg: 'bg-blue-50',
     },
     {
       icon: Trophy,
       title: 'Proven Results',
       desc: "Join thousands of investors who've already earned consistent returns with our platform.",
       stat: '12.5% Avg ROI',
-      color: 'text-blue-400',
+      color: 'text-[#F59E0B]',
+      bg: 'bg-amber-50',
     },
   ]
 
   const stats = [
-    { icon: Users, label: 'Active Investors', value: '15,000+', color: 'text-green-400' },
-    { icon: DollarSign, label: 'Capital Deployed', value: '$50M+', color: 'text-blue-400' },
-    { icon: Target, label: 'Success Rate', value: '94%', color: 'text-pink-400' },
-    { icon: Clock, label: 'Avg. Return Time', value: '15 Days', color: 'text-emerald-500' },
+    { icon: Users, label: 'Active Investors', value: '15,000+', color: 'text-[#2563EB]' },
+    { icon: DollarSign, label: 'Capital Deployed', value: '$50M+', color: 'text-[#10B981]' },
+    { icon: Target, label: 'Success Rate', value: '94%', color: 'text-[#F59E0B]' },
+    { icon: Clock, label: 'Avg. Return Time', value: '15 Days', color: 'text-[#0F172A]' },
   ]
 
   const faqs = [
@@ -100,34 +104,33 @@ export default function LearnPage() {
   ]
 
   return (
-    <div className="bg-slate-900 text-white overflow-hidden">
+    <div className="bg-white text-[#0F172A] overflow-hidden pt-16">
       {/* Hero Section */}
-      <section className="relative px-6 md:px-12 lg:px-20 py-32 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tl from-slate-900 via-gray-900 to-emerald-950"></div>
+      <section className="relative px-6 md:px-12 lg:px-20 py-32 text-center overflow-hidden bg-[#F8FAFC]">
         <div className="relative z-10">
-          <div className="inline-flex items-center px-6 py-3 bg-emerald-500/10 rounded-full border border-emerald-500/30 mb-8 backdrop-blur-sm">
-            <Zap className="h-5 w-5 text-emerald-400 mr-2" />
-            <span className="text-emerald-300 font-medium">Smart Investment Platform</span>
+          <div className="inline-flex items-center px-6 py-3 bg-blue-50 rounded-full border border-blue-100 mb-8 backdrop-blur-sm">
+            <Zap className="h-5 w-5 text-[#2563EB] mr-2" />
+            <span className="text-[#2563EB] font-bold">Smart Investment Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight tracking-tight">
             Turn Your Money Into a{' '}
-            <span className="block bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
               Profit Machine
             </span>
           </h1>
 
-          <p className="text-gray-300 text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
+          <p className="text-[#475569] text-xl max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
             Join the revolution of smart investing. Fund real businesses, earn real returns,
             and watch your capital grow with complete transparency and security.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-            <button className="group px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105">
+            <Link href="/auth/register" className="group px-8 py-4 bg-[#2563EB] text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-blue-900/10 hover:bg-[#1D4ED8] transition-all duration-300 transform hover:-translate-y-1">
               Start Investing Now
               <ArrowRight className="inline-block ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="px-8 py-4 border-2 border-emerald-500/50 rounded-full font-semibold text-lg hover:bg-emerald-500/10 transition-all duration-300">
+            </Link>
+            <button className="px-8 py-4 border-2 border-[#E2E8F0] text-[#0F172A] rounded-xl font-bold text-lg hover:bg-[#F1F5F9] transition-all duration-300">
               Watch Demo
             </button>
           </div>
@@ -135,12 +138,12 @@ export default function LearnPage() {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {stats.map((stat, idx) => (
-              <div key={idx} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-black/30 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div key={idx} className="text-center group bg-white p-6 rounded-2xl shadow-sm border border-[#E2E8F0] hover:shadow-md transition-all">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-[#F8FAFC] rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
                   <stat.icon className={`h-8 w-8 ${stat.color}`} />
                 </div>
-                <div className={`text-2xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
-                <div className="text-gray-400 text-sm">{stat.label}</div>
+                <div className="text-2xl font-bold text-[#0F172A] mb-1">{stat.value}</div>
+                <div className="text-[#94A3B8] text-sm font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -148,13 +151,13 @@ export default function LearnPage() {
       </section>
 
       {/* How It Works */}
-      <section className="relative py-24 px-6 md:px-12 lg:px-20">
+      <section className="relative py-24 px-6 md:px-12 lg:px-20 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-4xl font-bold mb-4 text-[#0F172A]">
               How It Works
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-[#475569] text-lg max-w-2xl mx-auto font-medium">
               Three simple steps to start earning consistent returns on your investment
             </p>
           </div>
@@ -164,23 +167,21 @@ export default function LearnPage() {
               <div
                 key={idx}
                 className={`relative group cursor-pointer transition-all duration-500 ${
-                  activeStep === idx ? 'scale-105' : 'hover:scale-102'
+                  activeStep === idx ? 'scale-105' : 'hover:-translate-y-1'
                 }`}
                 onMouseEnter={() => setActiveStep(idx)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                <div className="relative bg-black/40 backdrop-blur-sm p-8 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-gradient-to-r ${step.color}`}>
-                    <step.icon className="h-8 w-8 text-white" />
+                <div className={`relative bg-white p-8 rounded-2xl border ${activeStep === idx ? 'border-[#2563EB] shadow-lg shadow-blue-900/5' : 'border-[#E2E8F0] shadow-sm'} transition-all duration-300`}>
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 ${step.color}`}>
+                    <step.icon className="h-8 w-8" />
                   </div>
 
-                  <h3 className="text-2xl font-bold mb-3 text-white">{step.title}</h3>
-                  <p className="text-gray-300 mb-4 leading-relaxed">{step.desc}</p>
-                  <p className="text-emerald-400 font-medium text-sm">{step.detail}</p>
+                  <h3 className="text-2xl font-bold mb-3 text-[#0F172A]">{step.title}</h3>
+                  <p className="text-[#475569] mb-4 leading-relaxed font-medium">{step.desc}</p>
+                  <p className="text-[#2563EB] font-bold text-sm">{step.detail}</p>
 
                   {activeStep === idx && (
-                    <div className="mt-4 flex items-center text-emerald-400 font-medium">
+                    <div className="mt-4 flex items-center text-[#10B981] font-bold">
                       <CheckCircle className="h-5 w-5 mr-2" />
                       Active Step
                     </div>
@@ -193,13 +194,13 @@ export default function LearnPage() {
       </section>
 
       {/* Benefits */}
-      <section className="py-24 px-6 md:px-12 lg:px-20">
+      <section className="py-24 px-6 md:px-12 lg:px-20 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-4xl font-bold mb-4 text-[#0F172A]">
               Why Choose Let's Grow?
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-[#475569] text-lg max-w-2xl mx-auto font-medium">
               We're not just another investment platform—we're your partner in building wealth
             </p>
           </div>
@@ -208,20 +209,20 @@ export default function LearnPage() {
             {benefits.map((benefit, idx) => (
               <div
                 key={idx}
-                className="group relative overflow-hidden bg-black/30 backdrop-blur-sm p-8 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 hover:transform hover:scale-105"
+                className="group relative overflow-hidden bg-white p-8 rounded-2xl border border-[#E2E8F0] hover:border-[#CBD5E1] transition-all duration-300 hover:shadow-lg"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full -mr-16 -mt-16 transition-all duration-300 group-hover:scale-150"></div>
-
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
-                    <benefit.icon className={`h-12 w-12 ${benefit.color}`} />
-                    <span className={`text-sm font-bold ${benefit.color} bg-black/30 px-3 py-1 rounded-full`}>
+                    <div className={`p-4 rounded-xl ${benefit.bg}`}>
+                      <benefit.icon className={`h-8 w-8 ${benefit.color}`} />
+                    </div>
+                    <span className={`text-sm font-bold ${benefit.color} ${benefit.bg} px-3 py-1 rounded-full`}>
                       {benefit.stat}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold mb-4 text-white">{benefit.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{benefit.desc}</p>
+                  <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">{benefit.title}</h3>
+                  <p className="text-[#475569] leading-relaxed font-medium">{benefit.desc}</p>
                 </div>
               </div>
             ))}
@@ -230,35 +231,35 @@ export default function LearnPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 px-6 md:px-12 lg:px-20">
+      <section className="py-24 px-6 md:px-12 lg:px-20 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-4xl font-bold mb-4 text-[#0F172A]">
               Got Questions?
             </h2>
-            <p className="text-gray-400 text-lg">We've got answers. Here's what investors ask us most.</p>
+            <p className="text-[#475569] text-lg font-medium">We've got answers. Here's what investors ask us most.</p>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-gray-800/30 backdrop-blur-sm rounded-2xl border border-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300 overflow-hidden"
+                className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#CBD5E1] transition-all duration-300 overflow-hidden shadow-sm"
               >
                 <button
-                  className="w-full p-6 text-left flex items-center justify-between hover:bg-emerald-500/5 transition-all duration-300"
+                  className="w-full p-6 text-left flex items-center justify-between hover:bg-[#F8FAFC] transition-all duration-300"
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 >
-                  <span className="font-semibold text-lg text-emerald-300 pr-4">{faq.q}</span>
+                  <span className="font-bold text-lg text-[#0F172A] pr-4">{faq.q}</span>
                   <ChevronDown
-                    className={`h-6 w-6 text-emerald-400 transition-transform duration-300 ${
-                      openFaq === idx ? 'rotate-180' : ''
+                    className={`h-6 w-6 text-[#94A3B8] transition-transform duration-300 ${
+                      openFaq === idx ? 'rotate-180 text-[#2563EB]' : ''
                     }`}
                   />
                 </button>
                 {openFaq === idx && (
                   <div className="px-6 pb-6 transition-all duration-300 ease-out">
-                    <p className="text-gray-300 leading-relaxed">{faq.a}</p>
+                    <p className="text-[#475569] leading-relaxed font-medium">{faq.a}</p>
                   </div>
                 )}
               </div>
@@ -268,29 +269,31 @@ export default function LearnPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 md:px-12 lg:px-20">
+      <section className="py-24 px-6 md:px-12 lg:px-20 bg-[#2563EB]">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
-            <Star className="h-12 w-12 text-emerald-400 mx-auto mb-4 animate-pulse" />
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <div className="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
+                <Star className="h-10 w-10 text-white" />
+            </div>
+            <h2 className="text-4xl font-bold mb-4 text-white">
               Ready to Start Growing?
             </h2>
-            <p className="text-gray-300 text-lg mb-8">
+            <p className="text-blue-100 text-lg mb-8 font-medium">
               Join thousands of smart investors who are already building wealth with Let's Grow.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="group px-12 py-4 bg-gradient-to-r from-emerald-600 to-green-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105">
+            <Link href="/auth/register" className="group px-12 py-4 bg-white text-[#2563EB] rounded-xl font-bold text-lg shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1">
               Start Investing Today
               <ArrowRight className="inline-block ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="px-12 py-4 border-2 border-emerald-500/50 rounded-full font-semibold text-lg hover:bg-emerald-500/10 transition-all duration-300">
+            </Link>
+            <button className="px-12 py-4 border-2 border-white/30 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-300">
               Schedule a Call
             </button>
           </div>
 
-          <p className="text-gray-400 text-sm mt-8">
+          <p className="text-blue-200 text-sm mt-8 font-medium">
             No hidden fees • Start with just $100 • Withdraw anytime
           </p>
         </div>

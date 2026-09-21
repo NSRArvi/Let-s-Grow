@@ -331,80 +331,80 @@ export default function LeaderboardSection() {
     const getRankIcon = (rank) => {
         switch (rank) {
             case 1:
-                return <Crown className="h-6 w-6 text-yellow-400" />;
+                return <Crown className="h-6 w-6 text-[#F59E0B]" />;
             case 2:
-                return <Medal className="h-6 w-6 text-gray-400" />;
+                return <Medal className="h-6 w-6 text-[#94A3B8]" />;
             case 3:
-                return <Trophy className="h-6 w-6 text-yellow-600" />;
+                return <Trophy className="h-6 w-6 text-[#D97706]" />;
             default:
-                return <span className="text-gray-400 font-bold">#{rank}</span>;
+                return <span className="text-[#94A3B8] font-bold">#{rank}</span>;
         }
     };
 
     const getBadgeColor = (badge) => {
         switch (badge) {
             case 'Diamond':
-                return 'from-cyan-400 to-blue-500';
+                return 'from-blue-400 to-[#2563EB]';
             case 'Platinum':
-                return 'from-gray-300 to-gray-500';
+                return 'from-gray-400 to-[#475569]';
             case 'Gold':
-                return 'from-yellow-400 to-yellow-600';
+                return 'from-yellow-400 to-[#F59E0B]';
             case 'Silver':
-                return 'from-gray-400 to-gray-600';
+                return 'from-slate-300 to-[#94A3B8]';
             case 'Bronze':
-                return 'from-orange-400 to-orange-600';
+                return 'from-orange-300 to-[#D97706]';
             default:
-                return 'from-gray-400 to-gray-600';
+                return 'from-gray-300 to-gray-500';
         }
     };
 
     const getStreakColor = (streak) => {
-        if (streak >= 20) return 'text-red-400';
-        if (streak >= 15) return 'text-orange-400';
-        if (streak >= 10) return 'text-yellow-400';
-        return 'text-green-400';
+        if (streak >= 20) return 'text-[#EF4444]';
+        if (streak >= 15) return 'text-[#F59E0B]';
+        if (streak >= 10) return 'text-[#FCD34D]';
+        return 'text-[#10B981]';
     };
 
     return (
-        <section className="py-20 bg-gradient-to-br from-gray-900 via-slate-900 to-emerald-900 relative overflow-hidden">
+        <section className="py-20 bg-white relative overflow-hidden border-t border-[#E2E8F0]">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-green-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-50/50 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-emerald-50/50 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className={`text-center mb-16 ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}>
-                    <div className="inline-flex items-center space-x-2 bg-emerald-500/10 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-500/20 mb-6">
-                        <Trophy className="h-4 w-4 text-emerald-400" />
-                        <span className="text-emerald-400 text-sm font-medium">Top Performers</span>
+                    <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100 mb-6">
+                        <Trophy className="h-4 w-4 text-[#2563EB]" />
+                        <span className="text-[#2563EB] text-sm font-bold">Top Performers</span>
                     </div>
 
-                    <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-                        <span className="text-white">Investment</span>
+                    <h2 className="text-4xl lg:text-6xl font-bold mb-6 text-[#0F172A]">
+                        Investment
                         <br />
-                        <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
                             Leaderboard
                         </span>
                     </h2>
 
-                    <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-xl text-[#475569] max-w-2xl mx-auto font-medium">
                         See how our top investors are performing and get inspired by their success stories
                     </p>
                 </div>
 
                 {/* Period Selector */}
                 <div className={`flex justify-center mb-12 ${isVisible ? 'animate-fadeInUp delay-200' : 'opacity-0'}`}>
-                    <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-2 border border-emerald-500/20">
+                    <div className="bg-[#F8FAFC] rounded-2xl p-2 border border-[#E2E8F0] shadow-inner">
                         <div className="flex space-x-2">
                             {periods.map((period) => (
                                 <button
                                     key={period.id}
                                     onClick={() => setSelectedPeriod(period.id)}
-                                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${selectedPeriod === period.id
-                                        ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg shadow-emerald-500/25'
-                                        : 'text-gray-400 hover:text-white hover:bg-white/10'
+                                    className={`px-6 py-3 rounded-xl font-bold transition-all duration-200 ${selectedPeriod === period.id
+                                        ? 'bg-[#2563EB] text-white shadow-[0_4px_12px_rgba(37,99,235,0.2)]'
+                                        : 'text-[#475569] hover:text-[#0F172A] hover:bg-white'
                                         }`}
                                 >
                                     {period.label}
@@ -416,64 +416,64 @@ export default function LeaderboardSection() {
 
                 {/* Stats Overview */}
                 <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 ${isVisible ? 'animate-fadeInUp delay-300' : 'opacity-0'}`}>
-                    <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-emerald-500/20">
+                    <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
                         <div className="flex items-center space-x-4">
-                            <div className="bg-emerald-500/10 rounded-full p-3">
-                                <Users className="h-6 w-6 text-emerald-400" />
+                            <div className="bg-blue-50 rounded-xl p-3">
+                                <Users className="h-6 w-6 text-[#2563EB]" />
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">1,247</div>
-                                <div className="text-gray-400">Active Traders</div>
+                                <div className="text-2xl font-bold text-[#0F172A]">1,247</div>
+                                <div className="text-[#475569] font-medium">Active Traders</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-emerald-500/20">
+                    <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
                         <div className="flex items-center space-x-4">
-                            <div className="bg-emerald-500/10 rounded-full p-3">
-                                <TrendingUp className="h-6 w-6 text-emerald-400" />
+                            <div className="bg-[#ECFDF5] rounded-xl p-3">
+                                <TrendingUp className="h-6 w-6 text-[#10B981]" />
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">+89.2%</div>
-                                <div className="text-gray-400">Avg Returns</div>
+                                <div className="text-2xl font-bold text-[#0F172A]">+89.2%</div>
+                                <div className="text-[#475569] font-medium">Avg Returns</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-emerald-500/20">
+                    <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
                         <div className="flex items-center space-x-4">
-                            <div className="bg-emerald-500/10 rounded-full p-3">
-                                <Target className="h-6 w-6 text-emerald-400" />
+                            <div className="bg-blue-50 rounded-xl p-3">
+                                <Target className="h-6 w-6 text-[#2563EB]" />
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">92.4%</div>
-                                <div className="text-gray-400">Success Rate</div>
+                                <div className="text-2xl font-bold text-[#0F172A]">92.4%</div>
+                                <div className="text-[#475569] font-medium">Success Rate</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Leaderboard */}
-                <div className={`bg-black/40 backdrop-blur-xl rounded-2xl border border-emerald-500/20 overflow-hidden ${isVisible ? 'animate-fadeInUp delay-400' : 'opacity-0'}`}>
+                <div className={`bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden ${isVisible ? 'animate-fadeInUp delay-400' : 'opacity-0'}`}>
                     {/* Header */}
-                    <div className="hidden md:block bg-gradient-to-r from-emerald-600/20 to-green-600/20 p-6 border-b border-emerald-500/20">
-                        <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-300">
-                            <div className="col-span-1">Rank</div>
+                    <div className="hidden md:block bg-[#F8FAFC] p-6 border-b border-[#E2E8F0]">
+                        <div className="grid grid-cols-12 gap-4 text-sm font-bold text-[#475569] uppercase tracking-wider">
+                            <div className="col-span-1 text-center">Rank</div>
                             <div className="col-span-3">Trader</div>
                             <div className="col-span-2">Returns</div>
                             <div className="col-span-2">Profit</div>
                             <div className="col-span-2">Accuracy</div>
-                            <div className="col-span-1">Streak</div>
-                            <div className="col-span-1">Badge</div>
+                            <div className="col-span-1 text-center">Streak</div>
+                            <div className="col-span-1 text-center">Badge</div>
                         </div>
                     </div>
 
                     {/* Leaderboard Items */}
-                    <div className="divide-y divide-gray-800 overflow-x-auto">
+                    <div className="divide-y divide-[#F1F5F9] overflow-x-auto">
                         {leaderboardData[selectedPeriod].map((trader, index) => (
                             <div
                                 key={trader.rank}
-                                className={`p-6 hover:bg-emerald-500/5 transition-all duration-200 ${trader.rank <= 3 ? 'bg-gradient-to-r from-emerald-500/5 to-green-500/5' : ''
+                                className={`p-6 hover:bg-[#F8FAFC] transition-all duration-200 ${trader.rank <= 3 ? 'bg-blue-50/30' : ''
                                     }`}
                             >
                                 <div className="flex flex-col md:grid md:grid-cols-12 gap-4 items-center">
@@ -485,54 +485,54 @@ export default function LeaderboardSection() {
                                     {/* Trader Info */}
                                     <div className="flex md:col-span-3 items-center space-x-3 w-full">
                                         <div className="relative">
-                                            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center text-white font-bold">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] rounded-full flex items-center justify-center text-white font-bold shadow-md">
                                                 {trader.avatar}
                                             </div>
-                                            <div className="absolute -bottom-1 -right-1 text-lg text-white">{trader.country}</div>
+                                            <div className="absolute -bottom-1 -right-1 text-lg shadow-sm rounded-full bg-white">{trader.country}</div>
                                         </div>
                                         <div>
-                                            <div className="text-white font-semibold">{trader.name}</div>
-                                            <div className="text-gray-400 text-sm">{trader.trades} trades</div>
+                                            <div className="text-[#0F172A] font-bold">{trader.name}</div>
+                                            <div className="text-[#475569] text-sm font-medium">{trader.trades} trades</div>
                                         </div>
                                     </div>
 
                                     {/* Returns */}
                                     <div className="md:col-span-2 w-full md:w-auto">
                                         <div className="flex items-center space-x-2">
-                                            <ArrowUp className="h-4 w-4 text-green-400" />
-                                            <span className="text-green-400 font-bold text-lg">{trader.returns}</span>
+                                            <ArrowUp className="h-4 w-4 text-[#10B981]" />
+                                            <span className="text-[#10B981] font-bold text-lg">{trader.returns}</span>
                                         </div>
                                     </div>
 
                                     {/* Profit */}
                                     <div className="md:col-span-2 w-full md:w-auto">
-                                        <div className="text-white font-semibold text-lg">{trader.profit}</div>
+                                        <div className="text-[#0F172A] font-bold text-lg">{trader.profit}</div>
                                     </div>
 
                                     {/* Accuracy */}
                                     <div className="md:col-span-2 w-full">
                                         <div className="flex items-center space-x-2">
-                                            <div className="w-full bg-gray-700 rounded-full h-2">
+                                            <div className="w-full bg-[#E2E8F0] rounded-full h-2">
                                                 <div
-                                                    className="bg-gradient-to-r from-emerald-500 to-green-500 h-2 rounded-full transition-all duration-1000"
+                                                    className="bg-gradient-to-r from-[#2563EB] to-[#10B981] h-2 rounded-full transition-all duration-1000"
                                                     style={{ width: `${trader.accuracy}%` }}
                                                 ></div>
                                             </div>
-                                            <span className="text-white font-medium whitespace-nowrap">{trader.accuracy}%</span>
+                                            <span className="text-[#0F172A] font-bold whitespace-nowrap">{trader.accuracy}%</span>
                                         </div>
                                     </div>
 
                                     {/* Streak */}
-                                    <div className="md:col-span-1 w-full md:w-auto mt-2 md:mt-0">
-                                        <div className="flex items-center space-x-1">
+                                    <div className="md:col-span-1 w-full md:w-auto mt-2 md:mt-0 flex justify-center">
+                                        <div className="flex items-center space-x-1 bg-[#F8FAFC] px-2 py-1 rounded-lg border border-[#E2E8F0]">
                                             <Zap className={`h-4 w-4 ${getStreakColor(trader.streak)}`} />
                                             <span className={`font-bold ${getStreakColor(trader.streak)}`}>{trader.streak}</span>
                                         </div>
                                     </div>
 
                                     {/* Badge */}
-                                    <div className="md:col-span-1 w-full md:w-auto mt-2 md:mt-0">
-                                        <div className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${getBadgeColor(trader.badge)} text-center w-fit`}>
+                                    <div className="md:col-span-1 w-full md:w-auto mt-2 md:mt-0 flex justify-center">
+                                        <div className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${getBadgeColor(trader.badge)} shadow-sm`}>
                                             {trader.badge}
                                         </div>
                                     </div>
@@ -545,15 +545,15 @@ export default function LeaderboardSection() {
 
                 {/* Call to Action */}
                 <div className={`text-center mt-12 ${isVisible ? 'animate-fadeInUp delay-500' : 'opacity-0'}`}>
-                    <div className="bg-gradient-to-r from-emerald-600/20 to-green-600/20 backdrop-blur-xl rounded-2xl p-8 border border-emerald-500/20">
-                        <h3 className="text-2xl font-bold text-white mb-4">
+                    <div className="bg-blue-50 rounded-2xl p-8 border border-blue-100 shadow-sm">
+                        <h3 className="text-2xl font-bold text-[#0F172A] mb-4">
                             Ready to Join the Elite?
                         </h3>
-                        <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+                        <p className="text-[#475569] mb-6 max-w-2xl mx-auto font-medium">
                             Start your investment journey today and compete with the best traders in the world.
                             Our AI-powered platform gives you the tools to succeed.
                         </p>
-                        <button className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-8 py-4 rounded-lg font-bold hover:from-emerald-500 hover:to-green-500 transition-all duration-200 shadow-lg shadow-emerald-500/25">
+                        <button className="bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)]">
                             Start Trading Now
                         </button>
                     </div>

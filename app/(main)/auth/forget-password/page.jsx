@@ -44,20 +44,20 @@ export default function ForgetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-emerald-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-black/40 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-8 space-y-6 shadow-2xl">
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
+      <div className="w-full max-w-lg bg-white rounded-2xl border border-[#E2E8F0] p-8 space-y-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div className="text-center mb-4">
           <div className="mb-4">
-            {step === 1 && <Mail className="h-10 w-10 text-emerald-400 mx-auto" />}
-            {step === 2 && <ShieldCheck className="h-10 w-10 text-green-400 mx-auto" />}
-            {step === 3 && <Lock className="h-10 w-10 text-blue-400 mx-auto" />}
+            {step === 1 && <Mail className="h-10 w-10 text-[#2563EB] mx-auto" />}
+            {step === 2 && <ShieldCheck className="h-10 w-10 text-[#10B981] mx-auto" />}
+            {step === 3 && <Lock className="h-10 w-10 text-[#2563EB] mx-auto" />}
           </div>
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-[#0F172A]">
             {step === 1 && 'Find Your Account'}
             {step === 2 && 'Enter OTP'}
             {step === 3 && 'Reset Password'}
           </h2>
-          <p className="text-gray-400 mt-1">
+          <p className="text-[#475569] mt-1 font-medium">
             {step === 1 && 'Enter your registered email to reset your password.'}
             {step === 2 && 'We’ve sent a code to your email. Enter it below.'}
             {step === 3 && 'Set a new secure password for your account.'}
@@ -67,10 +67,10 @@ export default function ForgetPasswordPage() {
         {/* Step 1: Email Input */}
         {step === 1 && (
           <div>
-            <label className="block text-sm font-medium text-emerald-300 mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-[#0F172A] mb-2">Email Address</label>
             <input
               type="email"
-              className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-white placeholder-gray-500"
+              className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all duration-200 text-[#0F172A] placeholder-[#94A3B8] outline-none"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -83,25 +83,25 @@ export default function ForgetPasswordPage() {
         {step === 2 && (
           <>
             <div>
-              <label className="block text-sm font-medium text-green-300 mb-2">OTP Code</label>
+              <label className="block text-sm font-medium text-[#0F172A] mb-2">OTP Code</label>
               <input
                 type="text"
                 maxLength={6}
-                className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-white placeholder-gray-500"
-                placeholder="Enter 6-digit code"
+                className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all duration-200 text-[#0F172A] placeholder-[#94A3B8] outline-none text-center font-mono tracking-widest text-lg"
+                placeholder="000000"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
               />
             </div>
-            <div className="text-sm text-gray-400 flex items-center justify-between">
+            <div className="text-sm text-[#475569] flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4 text-green-400" />
+                <Clock className="h-4 w-4 text-[#F59E0B]" />
                 <span>Resend in: {formatTimer()}</span>
               </div>
               <button
                 disabled={timer > 0}
                 className={`flex items-center gap-1 ${
-                  timer > 0 ? 'text-gray-600' : 'text-emerald-400 hover:text-emerald-300'
+                  timer > 0 ? 'text-[#94A3B8]' : 'text-[#2563EB] hover:text-[#1D4ED8]'
                 } font-medium transition-colors`}
               >
                 <RefreshCw className="h-4 w-4" />
@@ -115,20 +115,20 @@ export default function ForgetPasswordPage() {
         {step === 3 && (
           <>
             <div>
-              <label className="block text-sm font-medium text-emerald-300 mb-2">New Password</label>
+              <label className="block text-sm font-medium text-[#0F172A] mb-2">New Password</label>
               <input
                 type="password"
-                className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-white placeholder-gray-500"
+                className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all duration-200 text-[#0F172A] placeholder-[#94A3B8] outline-none"
                 placeholder="New secure password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-emerald-300 mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium text-[#0F172A] mb-2">Confirm Password</label>
               <input
                 type="password"
-                className="w-full px-4 py-3 bg-gray-900/80 border border-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition text-white placeholder-gray-500"
+                className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all duration-200 text-[#0F172A] placeholder-[#94A3B8] outline-none"
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -140,7 +140,7 @@ export default function ForgetPasswordPage() {
         {/* Next / Submit Button */}
         <button
           onClick={handleNext}
-          className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-semibold py-3 rounded-lg hover:from-emerald-500 hover:to-green-500 transition-all duration-300"
+          className="w-full bg-[#2563EB] text-white font-bold py-3.5 rounded-xl hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)]"
         >
           {step === 1 && 'Search Account'}
           {step === 2 && 'Verify OTP'}
@@ -153,7 +153,7 @@ export default function ForgetPasswordPage() {
             <div
               key={s}
               className={`h-2 w-6 rounded-full transition-all ${
-                step >= s ? 'bg-emerald-400' : 'bg-gray-700'
+                step >= s ? 'bg-[#2563EB]' : 'bg-[#E2E8F0]'
               }`}
             ></div>
           ))}

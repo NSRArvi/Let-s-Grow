@@ -23,22 +23,22 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-gradient-to-tr from-slate-900 via-gray-900 to-emerald-900 relative overflow-hidden flex items-center pt-16">
+    <section className="min-h-screen bg-gradient-to-tr from-[#F8FAFC] via-white to-[#F1F5F9] relative overflow-hidden flex items-center pt-16">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-green-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-600/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-100/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl animate-pulse delay-2000"></div>
         
         {/* Floating Elements */}
-        <div className="absolute top-20 right-20 animate-float">
-          <div className="bg-emerald-500/10 backdrop-blur-sm rounded-full p-4 border border-emerald-500/20">
-            <TrendingUp className="h-8 w-8 text-emerald-400" />
+        <div className="absolute top-20 right-20 animate-float hidden lg:block">
+          <div className="bg-white rounded-full p-4 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E2E8F0]">
+            <TrendingUp className="h-8 w-8 text-[#2563EB]" />
           </div>
         </div>
-        <div className="absolute bottom-20 left-20 animate-float delay-1000">
-          <div className="bg-green-500/10 backdrop-blur-sm rounded-full p-4 border border-green-500/20">
-            <Shield className="h-8 w-8 text-green-400" />
+        <div className="absolute bottom-20 left-20 animate-float delay-1000 hidden lg:block">
+          <div className="bg-white rounded-full p-4 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-[#E2E8F0]">
+            <Shield className="h-8 w-8 text-[#10B981]" />
           </div>
         </div>
       </div>
@@ -48,21 +48,21 @@ export default function HeroSection() {
           {/* Left Content */}
           <div className={`space-y-8 ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}>
             {/* Badge */}
-            <div className="inline-flex items-center space-x-2 bg-emerald-500/10 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-500/20">
-              <Star className="h-4 w-4 text-emerald-400" />
-              <span className="text-emerald-400 text-sm font-medium">#1 Digital Investment Platform</span>
+            <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100">
+              <Star className="h-4 w-4 text-[#2563EB]" />
+              <span className="text-[#2563EB] text-sm font-bold">#1 Digital Investment Platform</span>
             </div>
 
             {/* Main Heading */}
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                <span className="text-white">Grow Your</span>
+              <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-[#0F172A]">
+                Grow Your
                 <br />
-                <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
                   Digital Wealth
                 </span>
               </h1>
-              <p className="text-xl text-gray-300 max-w-xl leading-relaxed">
+              <p className="text-xl text-[#475569] max-w-xl leading-relaxed">
                 Invest in the future with AI-powered insights, blockchain security, and real-time market analysis. Start building your portfolio today.
               </p>
             </div>
@@ -71,13 +71,13 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/register"
-                className="group bg-gradient-to-r from-emerald-600 to-green-600 text-white px-8 py-4 rounded-lg font-bold hover:from-emerald-500 hover:to-green-500 transition-all duration-200 shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2"
+                className="group bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)] flex items-center justify-center space-x-2"
               >
                 <span>Start Investing</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <button className="group bg-black/40 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-bold border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-200 flex items-center justify-center space-x-2">
-                <Play className="h-5 w-5" />
+              <button className="group bg-white text-[#0F172A] px-8 py-4 rounded-xl font-bold border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                <Play className="h-5 w-5 text-[#2563EB]" />
                 <span>Watch Demo</span>
               </button>
             </div>
@@ -85,16 +85,16 @@ export default function HeroSection() {
             {/* Trust Indicators */}
             <div className="flex items-center space-x-8 pt-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-400">A+</div>
-                <div className="text-sm text-gray-400">Security Rating</div>
+                <div className="text-2xl font-bold text-[#10B981]">A+</div>
+                <div className="text-sm font-medium text-[#475569]">Security Rating</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-400">$0</div>
-                <div className="text-sm text-gray-400">Minimum Investment</div>
+                <div className="text-2xl font-bold text-[#2563EB]">$0</div>
+                <div className="text-sm font-medium text-[#475569]">Minimum Investment</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-400">24/7</div>
-                <div className="text-sm text-gray-400">AI Monitoring</div>
+                <div className="text-2xl font-bold text-[#F59E0B]">24/7</div>
+                <div className="text-sm font-medium text-[#475569]">AI Monitoring</div>
               </div>
             </div>
           </div>
@@ -102,12 +102,12 @@ export default function HeroSection() {
           {/* Right Content - Stats & Features */}
           <div className={`space-y-6 ${isVisible ? 'animate-fadeInUp delay-300' : 'opacity-0'}`}>
             {/* Dynamic Stats Card */}
-            <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-emerald-500/20 shadow-2xl">
+            <div className="bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
               <div className="text-center space-y-4">
-                <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent">
+                <div className="text-5xl font-bold bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
                   {stats[currentStat].value}
                 </div>
-                <div className="text-gray-300 text-lg font-medium">
+                <div className="text-[#0F172A] text-lg font-bold">
                   {stats[currentStat].label}
                 </div>
                 <div className="flex justify-center space-x-2">
@@ -115,7 +115,7 @@ export default function HeroSection() {
                     <div
                       key={index}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === currentStat ? 'bg-emerald-400' : 'bg-gray-600'
+                        index === currentStat ? 'bg-[#2563EB]' : 'bg-[#E2E8F0]'
                       }`}
                     />
                   ))}
@@ -125,33 +125,33 @@ export default function HeroSection() {
 
             {/* Feature Cards */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200">
-                <div className="bg-emerald-500/10 rounded-full p-3 w-fit mb-4">
-                  <Zap className="h-6 w-6 text-emerald-400" />
+              <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-200">
+                <div className="bg-blue-50 rounded-full p-3 w-fit mb-4">
+                  <Zap className="h-6 w-6 text-[#2563EB]" />
                 </div>
-                <h3 className="text-white font-semibold mb-2">Instant Trading</h3>
-                <p className="text-gray-400 text-sm">Execute trades in milliseconds with our advanced infrastructure</p>
+                <h3 className="text-[#0F172A] font-bold mb-2">Instant Trading</h3>
+                <p className="text-[#475569] text-sm font-medium">Execute trades in milliseconds with our advanced infrastructure</p>
               </div>
-              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200">
-                <div className="bg-emerald-500/10 rounded-full p-3 w-fit mb-4">
-                  <Shield className="h-6 w-6 text-emerald-400" />
+              <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-200">
+                <div className="bg-[#ECFDF5] rounded-full p-3 w-fit mb-4">
+                  <Shield className="h-6 w-6 text-[#10B981]" />
                 </div>
-                <h3 className="text-white font-semibold mb-2">Bank Security</h3>
-                <p className="text-gray-400 text-sm">Military-grade encryption protects your investments</p>
+                <h3 className="text-[#0F172A] font-bold mb-2">Bank Security</h3>
+                <p className="text-[#475569] text-sm font-medium">Military-grade encryption protects your investments</p>
               </div>
-              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200">
-                <div className="bg-emerald-500/10 rounded-full p-3 w-fit mb-4">
-                  <DollarSign className="h-6 w-6 text-emerald-400" />
+              <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-200">
+                <div className="bg-[#FFFBEB] rounded-full p-3 w-fit mb-4">
+                  <DollarSign className="h-6 w-6 text-[#F59E0B]" />
                 </div>
-                <h3 className="text-white font-semibold mb-2">Daily Returns</h3>
-                <p className="text-gray-400 text-sm">Consistent profits with our AI-driven strategies</p>
+                <h3 className="text-[#0F172A] font-bold mb-2">Daily Returns</h3>
+                <p className="text-[#475569] text-sm font-medium">Consistent profits with our AI-driven strategies</p>
               </div>
-              <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200">
-                <div className="bg-emerald-500/10 rounded-full p-3 w-fit mb-4">
-                  <Users className="h-6 w-6 text-emerald-400" />
+              <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all duration-200">
+                <div className="bg-blue-50 rounded-full p-3 w-fit mb-4">
+                  <Users className="h-6 w-6 text-[#2563EB]" />
                 </div>
-                <h3 className="text-white font-semibold mb-2">Expert Support</h3>
-                <p className="text-gray-400 text-sm">24/7 support from investment professionals</p>
+                <h3 className="text-[#0F172A] font-bold mb-2">Expert Support</h3>
+                <p className="text-[#475569] text-sm font-medium">24/7 support from investment professionals</p>
               </div>
             </div>
           </div>

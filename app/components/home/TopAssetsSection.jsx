@@ -110,25 +110,25 @@ export default function TopAssetsSection() {
     
 
     return (
-        <section className="py-20 bg-gradient-to-b from-slate-900 to-gray-900 relative overflow-hidden">
+        <section className="py-20 bg-gradient-to-b from-[#F8FAFC] to-white relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-green-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-emerald-100/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center space-x-2 bg-emerald-500/10 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-500/20 mb-6">
-                        <TrendingUp className="h-4 w-4 text-emerald-400" />
-                        <span className="text-emerald-400 text-sm font-medium">Top Performing Assets</span>
+                    <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100 mb-6">
+                        <TrendingUp className="h-4 w-4 text-[#2563EB]" />
+                        <span className="text-[#2563EB] text-sm font-bold">Top Performing Assets</span>
                     </div>
-                    <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4">
                         Invest in Tomorrow's
-                        <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent"> Winners</span>
+                        <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent"> Winners</span>
                     </h2>
-                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                    <p className="text-xl text-[#475569] max-w-3xl mx-auto font-medium">
                         Our AI analyzes thousands of digital assets to identify the most promising investment opportunities
                     </p>
                 </div>
@@ -140,56 +140,56 @@ export default function TopAssetsSection() {
                         {assets.map((asset, index) => (
                             <div
                                 key={asset.id}
-                                className={`bg-black/40 backdrop-blur-xl rounded-xl p-6 border transition-all duration-500 cursor-pointer transform ${selectedAsset === index
+                                className={`bg-white rounded-xl p-6 border transition-all duration-500 cursor-pointer transform shadow-sm ${selectedAsset === index
                                         ? isVisible
-                                            ? 'border-emerald-500/50 bg-emerald-500/10 scale-100 opacity-100'
+                                            ? 'border-[#2563EB] bg-blue-50/50 scale-100 opacity-100 ring-1 ring-[#2563EB]/20'
                                             : 'opacity-0 scale-95'
-                                        : 'border-emerald-500/20 hover:border-emerald-500/30 opacity-60'
+                                        : 'border-[#E2E8F0] hover:border-[#CBD5E1] opacity-70 hover:opacity-100'
                                     }`}
                                 onClick={() => setSelectedAsset(index)}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-4">
-                                        <div className="bg-gradient-to-r from-emerald-400 to-green-500 rounded-full size-12 p-3 text-black font-bold text-3xl flex justify-center items-center">
+                                        <div className="bg-[#0F172A] rounded-full size-12 p-3 text-white font-bold text-2xl flex justify-center items-center shadow-md">
                                             {asset.icon}
                                         </div>
                                         <div>
-                                            <h3 className="text-white font-semibold text-lg">{asset.name}</h3>
-                                            <p className="text-gray-400">{asset.symbol}</p>
+                                            <h3 className="text-[#0F172A] font-bold text-lg">{asset.name}</h3>
+                                            <p className="text-[#475569] font-medium">{asset.symbol}</p>
                                         </div>
                                     </div>
 
                                     <div className="text-right">
-                                        <div className="text-white font-bold text-xl">{asset.price}</div>
-                                        <div className={`flex items-center space-x-1 ${asset.isPositive ? 'text-emerald-400' : 'text-red-400'
+                                        <div className="text-[#0F172A] font-bold text-xl">{asset.price}</div>
+                                        <div className={`flex items-center space-x-1 justify-end ${asset.isPositive ? 'text-[#10B981]' : 'text-[#EF4444]'
                                             }`}>
                                             {asset.isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                                            <span className="font-medium">{asset.change}</span>
+                                            <span className="font-bold text-sm">{asset.change}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Progress Bar */}
-                                <div className="mt-4 bg-gray-700 rounded-full h-2">
+                                <div className="mt-4 bg-[#E2E8F0] rounded-full h-2">
                                     <div
-                                        className="bg-gradient-to-r from-emerald-400 to-green-500 h-2 rounded-full transition-all duration-1000"
+                                        className="bg-gradient-to-r from-[#2563EB] to-[#10B981] h-2 rounded-full transition-all duration-1000"
                                         style={{ width: `${(asset.rating / 5) * 100}%` }}
                                     ></div>
                                 </div>
 
                                 <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
                                     <div>
-                                        <p className="text-gray-400">Volume</p>
-                                        <p className="text-white font-medium">{asset.volume}</p>
+                                        <p className="text-[#94A3B8] font-medium">Volume</p>
+                                        <p className="text-[#0F172A] font-bold">{asset.volume}</p>
                                     </div>
                                     <div>
-                                        <p className="text-gray-400">Market Cap</p>
-                                        <p className="text-white font-medium">{asset.marketCap}</p>
+                                        <p className="text-[#94A3B8] font-medium">Market Cap</p>
+                                        <p className="text-[#0F172A] font-bold">{asset.marketCap}</p>
                                     </div>
                                     <div>
-                                        <p className="text-gray-400">Risk Level</p>
-                                        <p className={`font-medium ${asset.risk === 'Low' ? 'text-emerald-400' :
-                                                asset.risk === 'Medium' ? 'text-yellow-400' : 'text-red-400'
+                                        <p className="text-[#94A3B8] font-medium">Risk Level</p>
+                                        <p className={`font-bold ${asset.risk === 'Low' ? 'text-[#10B981]' :
+                                                asset.risk === 'Medium' ? 'text-[#F59E0B]' : 'text-[#EF4444]'
                                             }`}>{asset.risk}</p>
                                     </div>
                                 </div>
@@ -200,13 +200,13 @@ export default function TopAssetsSection() {
                     {/* Asset Details */}
                     <div className="space-y-6">
                         {/* Featured Asset Card */}
-                        <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-emerald-500/20 sticky top-24">
+                        <div className="bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-[0_8px_30px_rgb(0,0,0,0.04)] sticky top-24">
                             <div className="text-center mb-6">
-                                <div className="bg-gradient-to-r from-emerald-400 to-green-500 rounded-full size-14 p-4 flex justify-center items-center text-black font-bold text-3xl mx-auto mb-4">
+                                <div className="bg-[#0F172A] rounded-full size-16 p-4 flex justify-center items-center text-white font-bold text-3xl mx-auto mb-4 shadow-lg">
                                     {assets[selectedAsset].icon}
                                 </div>
-                                <h3 className="text-2xl font-bold text-white mb-2">{assets[selectedAsset].name}</h3>
-                                <p className="text-gray-400 mb-4">{assets[selectedAsset].description}</p>
+                                <h3 className="text-2xl font-bold text-[#0F172A] mb-2">{assets[selectedAsset].name}</h3>
+                                <p className="text-[#475569] mb-4 font-medium">{assets[selectedAsset].description}</p>
 
                                 {/* Rating */}
                                 <div className="flex justify-center items-center space-x-2 mb-6">
@@ -215,25 +215,25 @@ export default function TopAssetsSection() {
                                             <Star
                                                 key={i}
                                                 className={`h-4 w-4 ${i < Math.floor(assets[selectedAsset].rating)
-                                                        ? 'text-yellow-400 fill-current'
-                                                        : 'text-gray-600'
+                                                        ? 'text-[#F59E0B] fill-current'
+                                                        : 'text-[#E2E8F0]'
                                                     }`}
                                             />
                                         ))}
                                     </div>
-                                    <span className="text-white font-medium">{assets[selectedAsset].rating}</span>
+                                    <span className="text-[#0F172A] font-bold">{assets[selectedAsset].rating}</span>
                                 </div>
                             </div>
 
                             {/* Price Info */}
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-4 mb-6 bg-[#F8FAFC] p-4 rounded-xl border border-[#E2E8F0]">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-gray-400">Current Price</span>
-                                    <span className="text-white font-bold text-xl">{assets[selectedAsset].price}</span>
+                                    <span className="text-[#475569] font-medium">Current Price</span>
+                                    <span className="text-[#0F172A] font-bold text-xl">{assets[selectedAsset].price}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-gray-400">24h Change</span>
-                                    <span className={`font-medium ${assets[selectedAsset].isPositive ? 'text-emerald-400' : 'text-red-400'
+                                    <span className="text-[#475569] font-medium">24h Change</span>
+                                    <span className={`font-bold ${assets[selectedAsset].isPositive ? 'text-[#10B981]' : 'text-[#EF4444]'
                                         }`}>
                                         {assets[selectedAsset].change} ({assets[selectedAsset].changeValue})
                                     </span>
@@ -242,45 +242,37 @@ export default function TopAssetsSection() {
 
                             {/* Action Buttons */}
                             <div className="space-y-3">
-                                <button className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white py-3 px-4 rounded-lg font-bold hover:from-emerald-500 hover:to-green-500 transition-all duration-200 shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2">
+                                <button className="w-full bg-[#2563EB] text-white py-3.5 px-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)] flex items-center justify-center space-x-2">
                                     <DollarSign className="h-5 w-5" />
                                     <span>Invest Now</span>
                                 </button>
-                                <button className="w-full bg-black/40 backdrop-blur-sm text-white py-3 px-4 rounded-lg font-medium border border-emerald-500/20 hover:bg-emerald-500/10 transition-all duration-200 flex items-center justify-center space-x-2">
-                                    <Zap className="h-5 w-5" />
+                                <button className="w-full bg-white text-[#0F172A] py-3.5 px-4 rounded-xl font-bold border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                                    <Zap className="h-5 w-5 text-[#2563EB]" />
                                     <span>Add to Watchlist</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Market Summary */}
-                        <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-emerald-500/20">
-                            <h4 className="text-white font-semibold mb-4">Market Summary</h4>
+                        <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm">
+                            <h4 className="text-[#0F172A] font-bold mb-4">Market Summary</h4>
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-400">Total Market Cap</span>
-                                    <span className="text-emerald-400 font-medium">$1.2T</span>
+                                    <span className="text-[#475569] font-medium">Total Market Cap</span>
+                                    <span className="text-[#0F172A] font-bold">$1.2T</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-400">24h Volume</span>
-                                    <span className="text-emerald-400 font-medium">$45.2B</span>
+                                    <span className="text-[#475569] font-medium">24h Volume</span>
+                                    <span className="text-[#0F172A] font-bold">$45.2B</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-400">Market Sentiment</span>
-                                    <span className="text-emerald-400 font-medium">Bullish</span>
+                                    <span className="text-[#475569] font-medium">Market Sentiment</span>
+                                    <span className="text-[#10B981] font-bold">Bullish</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Bottom CTA */}
-                {/* <div className="text-center mt-16">
-                    <button className="group bg-gradient-to-r from-emerald-600 to-green-600 text-white px-8 py-4 rounded-lg font-bold hover:from-emerald-500 hover:to-green-500 transition-all duration-200 shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 mx-auto">
-                        <span>View All Assets</span>
-                        <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </div> */}
             </div>
         </section>
     )

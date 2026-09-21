@@ -1,102 +1,153 @@
 "use client";
 
-import React, { useState } from "react";
-import { products } from "./products";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/app/components/AuthProvider";
+import { RefreshCw, Package, Clock, CheckCircle2, TrendingUp, CalendarDays } from "lucide-react";
 
-const tabs = ["all", "active", "passed"];
+export default function MyPackagesPage() {
+    const { user, supabase } = useAuth();
+    const [isLoading, setIsLoading] = useState(true);
+    const [myPackages, setMyPackages] = useState([]);
 
-export default function MyPackages() {
-    const [selectedTab, setSelectedTab] = useState("all");
+    useEffect(() => { if (user) { fetchMyPackages(); } }, [user]);
 
-    const now = new Date();
+    const fetchMyPackages = async () => {
+        setIsLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("user_packages")
+                .select(`*, packages:package_id ( name, image_url, return_multiplier )`)
+                .eq("user_id", user.id)
+                .order("id", { ascending: false });
+            if (error) throw error;
+            setMyPackages(data || []);
+        } catch (error) { console.error("Error fetching my packages:", error); }
+        finally { setIsLoading(false); }
+    };
 
-    const filteredPackages = products.filter((product) => {
-        const expiredDate = new Date(product.expiredDate);
-
-        if (selectedTab === "active") {
-            return expiredDate >= now;
-        }
-
-        if (selectedTab === "passed") {
-            return expiredDate < now;
-        }
-
-        return true;
-    });
-
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+                <RefreshCw className="w-8 h-8 text-[#2563EB] animate-spin mb-4" />
+                <p className="text-[#94A3B8]">Loading your portfolio...</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="py-10 px-4 lg:px-8 animate-fadeInUp">
-            <h1 className="text-3xl font-bold text-white mb-6">My Investment Packages</h1>
-
-            {/* Tabs */}
-            <div className="flex gap-4 flex-wrap mb-8">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setSelectedTab(tab)}
-                        className={`px-4 py-2 rounded-full font-medium border transition-all duration-200 uppercase text-sm cursor-pointer
-              ${selectedTab === tab
-                                ? "bg-emerald-500 text-white border-emerald-500"
-                                : "bg-black/30 text-gray-300 border-emerald-500/20 hover:bg-emerald-500/10"}`}
-                    >
-                        {tab}
-                    </button>
-                ))}
+        <div className="space-y-8 animate-fadeInUp pb-10">
+            <div>
+                <h1 className="text-2xl font-bold text-[#0F172A] mb-1 flex items-center gap-3">
+                    <Package className="text-[#2563EB]" /> My Portfolio
+                </h1>
+                <p className="text-[#94A3B8] text-sm">Track your active investments and expected returns.</p>
             </div>
 
-            {/* Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredPackages.map((product) => (
-                    <div
-                        key={product.id}
-                        className="bg-black/30 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-6 rounded-xl hover:shadow-lg hover:border-emerald-500 transition-all duration-200"
-                    >
-                        {/* Icon */}
-                        <div className="p-6 bg-emerald-500/10 rounded-full flex-shrink-0 w-fit">
-                            {product.icon}
-                        </div>
+            {myPackages.length === 0 ? (
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
+                    <Package className="w-16 h-16 text-[#E2E8F0] mx-auto mb-4" />
+                    <h2 className="text-xl font-bold text-[#0F172A] mb-2">No Active Packages</h2>
+                    <p className="text-[#94A3B8] max-w-md mx-auto">
+                        You haven't purchased any investment packages yet. Visit the Packages page to start growing your wealth.
+                    </p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {myPackages.map((item) => {
+                        const pkg = item.packages;
+                        const isCompleted = item.status === 'completed';
+                        const returnDate = new Date(item.return_at);
+                        const now = new Date();
+                        const daysRemaining = Math.ceil((returnDate - now) / (1000 * 60 * 60 * 24));
 
-                        {/* Info */}
-                        <div className="flex flex-col gap-1 flex-1 min-w-0">
-                            <h2 className="text-white font-semibold text-lg truncate">{product.name}</h2>
-                            <p className="text-sm text-gray-400 truncate">
-                                Bought: {product.buyDate} | Expires: {product.expiredDate}
-                            </p>
+                        return (
+                            <div 
+                                key={item.id} 
+                                className={`rounded-2xl border overflow-hidden transition-all duration-200 flex flex-col h-full bg-white shadow-[0_2px_8px_rgba(15,23,42,0.04)] hover:shadow-[0_4px_16px_rgba(15,23,42,0.08)] hover:-translate-y-0.5 ${
+                                    isCompleted ? "border-[#E2E8F0] opacity-80" : "border-[#E2E8F0]"
+                                }`}
+                            >
+                                <div className="h-32 bg-[#F8FAFC] relative">
+                                    {pkg?.image_url && (
+                                        <img src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover" />
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent"></div>
+                                    
+                                    <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end">
+                                        <h3 className="font-bold text-[#0F172A] text-lg truncate drop-shadow-sm">{pkg?.name}</h3>
+                                        {isCompleted ? (
+                                            <span className="bg-[#ECFDF5] text-[#047857] px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                                                <CheckCircle2 className="w-3 h-3" /> PAID
+                                            </span>
+                                        ) : (
+                                            <span className="bg-blue-50 text-[#2563EB] px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                                                <Clock className="w-3 h-3" /> ACTIVE
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
 
-                            {/* Capsule data */}
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                <span className="bg-blue-600/70 text-white font-semibold px-3 py-1 rounded-full text-sm whitespace-nowrap">
-                                    Invested: ${product.invest}
-                                </span>
-                                <span className="bg-green-600/70 text-white font-semibold px-3 py-1 rounded-full text-sm whitespace-nowrap">
-                                    Return: ${product.return}
-                                </span>
-                                <span className="bg-yellow-500 text-black font-semibold px-3 py-1 rounded-full text-sm whitespace-nowrap">
-                                    Stocks: {product.stocks}
-                                </span>
+                                <div className="p-5 space-y-4 flex-1">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="bg-[#F8FAFC] p-3 rounded-xl border border-[#E2E8F0]">
+                                            <p className="text-xs text-[#94A3B8] mb-1">Total Paid</p>
+                                            <p className="font-bold text-[#0F172A] text-lg">${Number(item.total_paid).toLocaleString()}</p>
+                                            <p className="text-[10px] text-[#94A3B8] mt-1">For {item.quantity} stocks</p>
+                                        </div>
+                                        <div className="bg-[#ECFDF5] p-3 rounded-xl border border-emerald-100">
+                                            <p className="text-xs text-[#94A3B8] mb-1">Expected Return</p>
+                                            <p className="font-bold text-[#10B981] text-lg flex items-center gap-1">
+                                                <TrendingUp className="w-4 h-4" />
+                                                ${Number(item.return_amount).toLocaleString()}
+                                            </p>
+                                            <p className="text-[10px] text-[#10B981] mt-1">
+                                                {(Number(pkg?.return_multiplier || 1) * 100).toFixed(0)}% ROI
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-[#E2E8F0] space-y-2">
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="text-[#94A3B8] flex items-center gap-2">
+                                                <CalendarDays className="w-4 h-4" /> Purchased
+                                            </span>
+                                            <span className="text-[#475569]">{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="text-[#94A3B8] flex items-center gap-2">
+                                                <Clock className="w-4 h-4" /> Return Date
+                                            </span>
+                                            <span className="text-[#0F172A] font-medium">{new Date(item.return_at).toLocaleDateString()}</span>
+                                        </div>
+                                        
+                                        {!isCompleted && (
+                                            <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+                                                {daysRemaining > 0 ? (
+                                                    <div className="bg-blue-50 text-[#2563EB] p-3 rounded-xl text-center text-sm font-medium border border-blue-100">
+                                                        Returns expected in <span className="font-bold">{daysRemaining} days</span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="bg-[#FFFBEB] text-[#B45309] p-3 rounded-xl text-center text-sm font-bold border border-amber-100">
+                                                        Return is due! Processing soon.
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                        
+                                        {isCompleted && (
+                                            <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+                                                <div className="bg-[#ECFDF5] text-[#047857] p-3 rounded-xl text-center text-sm font-medium border border-emerald-100">
+                                                    Returns have been added to your wallet!
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                ))}
-
-            </div>
-
-            <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out forwards;
-        }
-      `}</style>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }

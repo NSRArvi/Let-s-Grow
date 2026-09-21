@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
+import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const AuthContext = createContext();
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
@@ -23,7 +23,9 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Check active session on mount
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       setLoading(false);
     };
@@ -34,12 +36,12 @@ export function AuthProvider({ children }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      
-      if (event === 'SIGNED_IN') {
+
+      if (event === "SIGNED_IN") {
         router.refresh();
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === "SIGNED_OUT") {
         router.refresh();
-        router.push('/auth/login');
+        router.push("/auth/login");
       }
     });
 
@@ -59,7 +61,7 @@ export function AuthProvider({ children }) {
       throw error;
     }
     setLoading(false);
-    router.push('/dashboard/profile');
+    router.push("/dashboard/packages");
     return data;
   };
 
@@ -93,12 +95,8 @@ export function AuthProvider({ children }) {
     logout,
     loading,
     isAuthenticated: !!user,
-    supabase
+    supabase,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
