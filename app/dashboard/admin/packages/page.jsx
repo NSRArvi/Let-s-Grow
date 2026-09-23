@@ -275,6 +275,7 @@ export default function AdminPackagesPage() {
     if (!isAdmin) return null;
 
     return (
+        <>
         <div className="space-y-8 animate-fadeInUp pb-10">
             <div className="flex justify-between items-end">
                 <div>
@@ -395,10 +396,11 @@ export default function AdminPackagesPage() {
                     </table>
                 </div>
             </div>
+        </div>
 
             {/* Create/Edit Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" style={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0 }}>
                     <div className="bg-white border border-[#E2E8F0] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
                         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center sticky top-0 bg-white z-10">
                             <h2 className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
@@ -595,7 +597,7 @@ export default function AdminPackagesPage() {
 
             {/* Buyer Details Modal */}
             {selectedPackageForBuyers && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" style={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0 }}>
                     <div className="bg-white border border-[#E2E8F0] rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
                         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center bg-white">
                             <div>
@@ -671,6 +673,6 @@ export default function AdminPackagesPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

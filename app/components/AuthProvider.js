@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
       throw error;
     }
     setLoading(false);
-    router.push("/dashboard/packages");
+    router.push("/dashboard");
     return data;
   };
 

@@ -22,11 +22,11 @@ import { useAuth } from "../AuthProvider";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: Home },
-  { href: "/dashboard/packages", label: "Packages", icon: Package },
+  { href: "/dashboard/packages", label: "Market", icon: Package },
   { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
   { href: "/dashboard/profile", label: "Profile", icon: User },
   { href: "/dashboard/team", label: "Team", icon: Users },
-  { href: "/dashboard/my-packages", label: "My Packages", icon: PackageCheck },
+  { href: "/dashboard/my-packages", label: "Packages", icon: PackageCheck },
   // { href: "/dashboard/subscription", label: "Subscription", icon: Package2 },
   // { href: "/dashboard/offers", label: "Upcoming Offers", icon: Gift },
 ];
@@ -135,9 +135,7 @@ export default function Sidebar() {
         <button onClick={() => setIsOpen(true)} className="text-[#0F172A] p-1">
           <Menu size={22} />
         </button>
-        <p className="text-lg font-bold text-[#2563EB]">
-          Let's Grow
-        </p>
+        <p className="text-lg font-bold text-[#2563EB]">Let's Grow</p>
         <div className="w-8"></div>
       </div>
 

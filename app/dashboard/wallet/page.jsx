@@ -43,7 +43,9 @@ const PaymentMethodBadge = ({ method, selected, onClick }) => {
             e.target.style.display = "none";
           }}
         />
-        <span className={`text-sm font-bold ${selected ? "text-[#2563EB]" : "text-[#0F172A]"}`}>
+        <span
+          className={`text-sm font-bold ${selected ? "text-[#2563EB]" : "text-[#0F172A]"}`}
+        >
           {names[method]}
         </span>
       </div>
@@ -249,7 +251,7 @@ export default function WalletPage() {
       cash_in: `Cash In via ${method}`,
       withdraw: `Withdraw to ${method}`,
       buy_package: `Package Investment`,
-      profit_return: `Profit Return`,
+      package_return: `Package Return`,
     };
     return typeMap[type] || type;
   };
@@ -278,7 +280,9 @@ export default function WalletPage() {
               <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                 <Wallet className="w-4 h-4 text-[#2563EB]" />
               </div>
-              <p className="text-sm text-[#475569] font-medium">Current Balance</p>
+              <p className="text-sm text-[#475569] font-medium">
+                Current Balance
+              </p>
             </div>
             <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">
               ${balance.toLocaleString("en-US")}
@@ -303,7 +307,9 @@ export default function WalletPage() {
             <div className="w-8 h-8 rounded-lg bg-[#FFFBEB] flex items-center justify-center">
               <ArrowDownToLine className="w-4 h-4 text-[#F59E0B]" />
             </div>
-            <p className="text-sm text-[#475569] font-medium">Total Withdrawn</p>
+            <p className="text-sm text-[#475569] font-medium">
+              Total Withdrawn
+            </p>
           </div>
           <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">
             ${totalWithdrawn.toLocaleString("en-US")}
@@ -323,38 +329,72 @@ export default function WalletPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-[#0F172A] font-medium block">Select Method</label>
-            <div className="flex gap-2">
-              <PaymentMethodBadge method="bkash" selected={cashIn.method === "bkash"} onClick={(m) => setCashIn({ ...cashIn, method: m })} />
-              <PaymentMethodBadge method="nagad" selected={cashIn.method === "nagad"} onClick={(m) => setCashIn({ ...cashIn, method: m })} />
-              <PaymentMethodBadge method="rocket" selected={cashIn.method === "rocket"} onClick={(m) => setCashIn({ ...cashIn, method: m })} />
-              <PaymentMethodBadge method="binance" selected={cashIn.method === "binance"} onClick={(m) => setCashIn({ ...cashIn, method: m })} />
+            <label className="text-sm text-[#0F172A] font-medium block">
+              Select Method
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              <PaymentMethodBadge
+                method="bkash"
+                selected={cashIn.method === "bkash"}
+                onClick={(m) => setCashIn({ ...cashIn, method: m })}
+              />
+              <PaymentMethodBadge
+                method="nagad"
+                selected={cashIn.method === "nagad"}
+                onClick={(m) => setCashIn({ ...cashIn, method: m })}
+              />
+              <PaymentMethodBadge
+                method="rocket"
+                selected={cashIn.method === "rocket"}
+                onClick={(m) => setCashIn({ ...cashIn, method: m })}
+              />
+              <PaymentMethodBadge
+                method="binance"
+                selected={cashIn.method === "binance"}
+                onClick={(m) => setCashIn({ ...cashIn, method: m })}
+              />
             </div>
           </div>
 
           <div className="text-sm text-[#475569] bg-blue-50 border border-blue-100 p-4 rounded-xl">
             <p>
-              Send your exact BDT amount to <strong className="text-[#0F172A]">01554915902</strong> via{" "}
-              <span className="capitalize text-[#2563EB] font-bold">{cashIn.method}</span> first.
+              Send your exact amount to{" "}
+              <strong className="text-[#0F172A] block my-1 text-lg">
+                {cashIn.method === "bkash" && "01554915902 (Personal)"}
+                {cashIn.method === "nagad" && "01712345678 (Personal)"}
+                {cashIn.method === "rocket" && "01987654321 (Personal)"}
+                {cashIn.method === "binance" && "TDvW... (TRC20 Wallet)"}
+              </strong>{" "}
+              via <span className="capitalize text-[#2563EB] font-bold">{cashIn.method}</span> first.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">Amount (USD)</label>
+              <label className="text-sm text-[#0F172A] font-medium block">
+                Amount (USD)
+              </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
+                  $
+                </span>
                 <input
-                  type="number" min="1" step="1"
+                  type="number"
+                  min="1"
+                  step="1"
                   className="w-full bg-white text-[#0F172A] p-3 pl-8 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] outline-none transition-all"
                   value={cashIn.amount}
-                  onChange={(e) => setCashIn({ ...cashIn, amount: e.target.value })}
+                  onChange={(e) =>
+                    setCashIn({ ...cashIn, amount: e.target.value })
+                  }
                   required
                 />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">You Pay (BDT)</label>
+              <label className="text-sm text-[#0F172A] font-medium block">
+                You Pay (BDT)
+              </label>
               <div className="w-full bg-[#F8FAFC] text-[#2563EB] p-3 rounded-xl border border-[#E2E8F0] font-bold flex items-center justify-between">
                 <span>{calculateBDT(cashIn.amount)}</span>
                 <span className="text-xs text-[#94A3B8]">৳</span>
@@ -363,9 +403,12 @@ export default function WalletPage() {
           </div>
 
           <div className="space-y-1.5 mt-auto pt-2">
-            <label className="text-sm text-[#0F172A] font-medium block">Transaction ID</label>
+            <label className="text-sm text-[#0F172A] font-medium block">
+              Transaction ID
+            </label>
             <input
-              type="text" placeholder="e.g. 9G3X2M8L"
+              type="text"
+              placeholder="e.g. 9G3X2M8L"
               className="w-full bg-white text-[#0F172A] p-3 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] outline-none transition-all font-mono"
               value={cashIn.trxId}
               onChange={(e) => setCashIn({ ...cashIn, trxId: e.target.value })}
@@ -374,10 +417,15 @@ export default function WalletPage() {
           </div>
 
           <button
-            type="submit" disabled={isSubmitting}
+            type="submit"
+            disabled={isSubmitting}
             className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors text-white py-3.5 rounded-xl font-semibold disabled:opacity-50 flex justify-center items-center gap-2"
           >
-            {isSubmitting ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Submit Cash In Request"}
+            {isSubmitting ? (
+              <RefreshCw className="w-5 h-5 animate-spin" />
+            ) : (
+              "Submit Cash In Request"
+            )}
           </button>
         </form>
 
@@ -391,35 +439,67 @@ export default function WalletPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-[#0F172A] font-medium block">Receive Method</label>
-            <div className="flex gap-2">
-              <PaymentMethodBadge method="bkash" selected={withdraw.method === "bkash"} onClick={(m) => setWithdraw({ ...withdraw, method: m })} />
-              <PaymentMethodBadge method="nagad" selected={withdraw.method === "nagad"} onClick={(m) => setWithdraw({ ...withdraw, method: m })} />
-              <PaymentMethodBadge method="rocket" selected={withdraw.method === "rocket"} onClick={(m) => setWithdraw({ ...withdraw, method: m })} />
-              <PaymentMethodBadge method="binance" selected={withdraw.method === "binance"} onClick={(m) => setWithdraw({ ...withdraw, method: m })} />
+            <label className="text-sm text-[#0F172A] font-medium block">
+              Receive Method
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              <PaymentMethodBadge
+                method="bkash"
+                selected={withdraw.method === "bkash"}
+                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
+              />
+              <PaymentMethodBadge
+                method="nagad"
+                selected={withdraw.method === "nagad"}
+                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
+              />
+              <PaymentMethodBadge
+                method="rocket"
+                selected={withdraw.method === "rocket"}
+                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
+              />
+              <PaymentMethodBadge
+                method="binance"
+                selected={withdraw.method === "binance"}
+                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
+              />
             </div>
           </div>
 
           <div className="text-sm text-[#475569] bg-[#FFFBEB] border border-amber-100 p-4 rounded-xl">
-            <p>Funds will be sent to your selected account after admin verification.</p>
+            <p>
+              Funds will be sent to your selected account after admin
+              verification.
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">Amount (USD)</label>
+              <label className="text-sm text-[#0F172A] font-medium block">
+                Amount (USD)
+              </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
+                  $
+                </span>
                 <input
-                  type="number" min="1" step="1" max={balance}
+                  type="number"
+                  min="1"
+                  step="1"
+                  max={balance}
                   className="w-full bg-white text-[#0F172A] p-3 pl-8 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all"
                   value={withdraw.amount}
-                  onChange={(e) => setWithdraw({ ...withdraw, amount: e.target.value })}
+                  onChange={(e) =>
+                    setWithdraw({ ...withdraw, amount: e.target.value })
+                  }
                   required
                 />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">You Receive (BDT)</label>
+              <label className="text-sm text-[#0F172A] font-medium block">
+                You Receive (BDT)
+              </label>
               <div className="w-full bg-[#F8FAFC] text-[#F59E0B] p-3 rounded-xl border border-[#E2E8F0] font-bold flex items-center justify-between">
                 <span>{calculateBDT(withdraw.amount)}</span>
                 <span className="text-xs text-[#94A3B8]">৳</span>
@@ -428,21 +508,31 @@ export default function WalletPage() {
           </div>
 
           <div className="space-y-1.5 mt-auto pt-2">
-            <label className="text-sm text-[#0F172A] font-medium block">Account Number</label>
+            <label className="text-sm text-[#0F172A] font-medium block">
+              Account Number
+            </label>
             <input
-              type="text" placeholder="Where should we send it?"
+              type="text"
+              placeholder="Where should we send it?"
               className="w-full bg-white text-[#0F172A] p-3 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all font-mono"
               value={withdraw.number}
-              onChange={(e) => setWithdraw({ ...withdraw, number: e.target.value })}
+              onChange={(e) =>
+                setWithdraw({ ...withdraw, number: e.target.value })
+              }
               required
             />
           </div>
 
           <button
-            type="submit" disabled={isSubmitting || balance <= 0 || !withdraw.amount}
+            type="submit"
+            disabled={isSubmitting || balance <= 0 || !withdraw.amount}
             className="w-full bg-[#F59E0B] hover:bg-[#D97706] transition-colors text-white py-3.5 rounded-xl font-semibold disabled:opacity-50 flex justify-center items-center gap-2"
           >
-            {isSubmitting ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Submit Withdraw Request"}
+            {isSubmitting ? (
+              <RefreshCw className="w-5 h-5 animate-spin" />
+            ) : (
+              "Submit Withdraw Request"
+            )}
           </button>
         </form>
       </div>
@@ -450,17 +540,29 @@ export default function WalletPage() {
       {/* Transaction History */}
       <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] overflow-hidden">
         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-[#0F172A]">Transaction Ledger</h2>
-          {isLoading && <RefreshCw className="w-4 h-4 text-[#2563EB] animate-spin" />}
+          <h2 className="text-lg font-semibold text-[#0F172A]">
+            Transaction Ledger
+          </h2>
+          {isLoading && (
+            <RefreshCw className="w-4 h-4 text-[#2563EB] animate-spin" />
+          )}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead className="text-xs uppercase tracking-wider text-[#94A3B8] bg-[#F8FAFC] border-b border-[#E2E8F0]">
               <tr>
-                <th scope="col" className="py-3.5 px-6 font-medium">Type</th>
-                <th scope="col" className="py-3.5 px-6 font-medium">Amount</th>
-                <th scope="col" className="py-3.5 px-6 font-medium">Status</th>
-                <th scope="col" className="py-3.5 px-6 font-medium">Date</th>
+                <th scope="col" className="py-3.5 px-6 font-medium">
+                  Type
+                </th>
+                <th scope="col" className="py-3.5 px-6 font-medium">
+                  Amount
+                </th>
+                <th scope="col" className="py-3.5 px-6 font-medium">
+                  Status
+                </th>
+                <th scope="col" className="py-3.5 px-6 font-medium">
+                  Date
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F1F5F9]">
@@ -472,7 +574,10 @@ export default function WalletPage() {
                 </tr>
               )}
               {transactions.map((tx) => (
-                <tr key={tx.id} className="hover:bg-[#F8FAFC] transition-colors">
+                <tr
+                  key={tx.id}
+                  className="hover:bg-[#F8FAFC] transition-colors"
+                >
                   <td className="py-4 px-6">
                     <div className="font-medium text-[#0F172A] capitalize">
                       {formatType(tx.type, tx.method)}
@@ -484,8 +589,12 @@ export default function WalletPage() {
                     )}
                   </td>
                   <td className="py-4 px-6">
-                    <div className={`font-bold ${tx.type === "withdraw" || tx.type === "buy_package" ? "text-[#EF4444]" : "text-[#10B981]"}`}>
-                      {tx.type === "withdraw" || tx.type === "buy_package" ? "-" : "+"}{" "}
+                    <div
+                      className={`font-bold ${tx.type === "withdraw" || tx.type === "buy_package" ? "text-[#EF4444]" : "text-[#10B981]"}`}
+                    >
+                      {tx.type === "withdraw" || tx.type === "buy_package"
+                        ? "-"
+                        : "+"}{" "}
                       ${Number(tx.amount_usd).toLocaleString()}
                     </div>
                     <div className="text-xs text-[#94A3B8] mt-1">
@@ -495,11 +604,14 @@ export default function WalletPage() {
                   <td className="py-4 px-6">{renderStatus(tx.status)}</td>
                   <td className="py-4 px-6 text-[#475569]">
                     {new Date(tx.created_at).toLocaleDateString("en-US", {
-                      month: "short", day: "numeric", year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
                     })}
                     <div className="text-xs text-[#94A3B8] mt-1">
                       {new Date(tx.created_at).toLocaleTimeString("en-US", {
-                        hour: "2-digit", minute: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </div>
                   </td>

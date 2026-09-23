@@ -100,6 +100,7 @@ export default function AdminUsersPage() {
     if (!isAdmin) return null;
 
     return (
+        <>
         <div className="space-y-8 animate-fadeInUp pb-10">
             <div>
                 <h1 className="text-2xl font-bold text-[#0F172A] mb-2 flex items-center gap-3">
@@ -180,10 +181,11 @@ export default function AdminUsersPage() {
                     </table>
                 </div>
             </div>
+        </div>
 
             {/* User Details Modal */}
             {selectedUser && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fadeIn">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn" style={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0 }}>
                     <div className="bg-white border border-[#E2E8F0] rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
                         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center sticky top-0 bg-white z-10">
                             <h2 className="text-lg font-bold text-[#0F172A] flex items-center gap-2">
@@ -334,6 +336,6 @@ export default function AdminUsersPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }
