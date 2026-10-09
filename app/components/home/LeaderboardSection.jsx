@@ -376,10 +376,6 @@ export default function LeaderboardSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className={`text-center mb-16 ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}>
-                    <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100 mb-6">
-                        <Trophy className="h-4 w-4 text-[#2563EB]" />
-                        <span className="text-[#2563EB] text-sm font-bold">Top Performers</span>
-                    </div>
 
                     <h2 className="text-4xl lg:text-6xl font-bold mb-6 text-[#0F172A]">
                         Investment

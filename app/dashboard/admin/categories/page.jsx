@@ -5,6 +5,7 @@ import { useAuth } from "@/app/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { FolderTree, Plus, Trash2, RefreshCw, Pencil, X } from "lucide-react";
+import ConfirmModal from "@/app/components/shared/ConfirmModal";
 
 export default function AdminCategoriesPage() {
     const { user, supabase } = useAuth();
@@ -19,6 +20,11 @@ export default function AdminCategoriesPage() {
     const [slug, setSlug] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [editingId, setEditingId] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [confirmModalData, setConfirmModalData] = useState({
+        isOpen: false,
+        id: null
+    });
 
     useEffect(() => {
         if (user) {
@@ -123,11 +129,15 @@ export default function AdminCategoriesPage() {
         setSlug("");
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this category? Packages using this category might break!")) {
-            return;
-        }
+    const handleDeleteClick = (id) => {
+        setConfirmModalData({ isOpen: true, id });
+    };
 
+    const executeDelete = async () => {
+        const { id } = confirmModalData;
+        if (!id) return;
+        
+        setIsDeleting(true);
         try {
             const { error } = await supabase
                 .from("categories")
@@ -146,6 +156,9 @@ export default function AdminCategoriesPage() {
         } catch (error) {
             console.error("Error deleting category:", error);
             toast.error(error.message || "Failed to delete category");
+        } finally {
+            setIsDeleting(false);
+            setConfirmModalData({ isOpen: false, id: null });
         }
     };
 
@@ -281,7 +294,7 @@ export default function AdminCategoriesPage() {
                                                         <Pencil className="w-4 h-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(cat.id)}
+                                                        onClick={() => handleDeleteClick(cat.id)}
                                                         className="text-[#EF4444] hover:text-[#DC2626] p-2 hover:bg-red-50 rounded-lg transition-colors"
                                                         title="Delete Category"
                                                     >
@@ -297,6 +310,16 @@ export default function AdminCategoriesPage() {
                     </div>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={confirmModalData.isOpen}
+                onClose={() => setConfirmModalData({ isOpen: false, id: null })}
+                onConfirm={executeDelete}
+                title="Delete Category"
+                message="Are you sure you want to delete this category? Packages using this category might break!"
+                confirmText="Yes, Delete"
+                isLoading={isDeleting}
+            />
         </div>
     );
 }

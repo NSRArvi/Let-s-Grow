@@ -14,6 +14,7 @@ import {
   RefreshCw,
   CheckCircle2,
 } from "lucide-react";
+import BonusMissionCard from "@/app/components/shared/BonusMissionCard";
 
 import {
   Chart as ChartJS,
@@ -116,7 +117,17 @@ export default function DashboardPage() {
         activePackagesCount: activeCount,
       });
 
-      // Top Investors (Global)
+      // 1. Fetch real Platform Top Investors (Global via RPC)
+      try {
+        const { data: topData, error: topError } = await supabase.rpc("get_top_investors", { limit_count: 3 });
+        if (!topError && topData && topData.length > 0) {
+          setTopInvestors(topData);
+        }
+      } catch (err) {
+        console.error("Error loading top investors:", err);
+      }
+
+      // 2. Fetch Packages for Monthly & Category analytics
       const { data: allPkgs } = await supabase
         .from("user_packages")
         .select("user_id, total_paid, created_at, packages:package_id(category_id, categories(name)), profiles:user_id(full_name)");
@@ -127,7 +138,6 @@ export default function DashboardPage() {
         const catMap = {};
 
         allPkgs.forEach((p) => {
-          // Top Investors logic
           if (!investorMap[p.user_id]) {
             investorMap[p.user_id] = {
               id: p.user_id.split("-")[0].toUpperCase(),
@@ -152,11 +162,14 @@ export default function DashboardPage() {
           }
         });
 
-        const sorted = Object.values(investorMap)
-          .sort((a, b) => b.amount - a.amount)
-          .slice(0, 3);
+        // Fallback for top investors if RPC returned nothing
+        setTopInvestors((prev) => {
+          if (prev && prev.length > 0) return prev;
+          return Object.values(investorMap)
+            .sort((a, b) => b.amount - a.amount)
+            .slice(0, 3);
+        });
 
-        setTopInvestors(sorted);
         setMonthlyData(monthly);
         
         setCategoryData({
@@ -249,7 +262,7 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-fadeInUp pb-10">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Overview</h1>
+        <h1 className="text-2xl font-bold text-[#0F172A]">Dashboard</h1>
         <div className="text-sm text-[#475569] flex items-center gap-4 bg-white px-4 py-2 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
           <span className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-[#2563EB]" />
@@ -263,8 +276,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Bonus Mission Widget (Compact) */}
+      <BonusMissionCard compact={true} onClaimed={fetchDashboardData} />
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {statCards.map((item, idx) => (
           <div
             key={idx}

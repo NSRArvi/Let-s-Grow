@@ -52,7 +52,7 @@ export default function Page() {
             <p className="text-[#94A3B8]">Access your investment portfolio</p>
           </div>
 
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-[#0F172A] mb-2">
@@ -124,7 +124,6 @@ export default function Page() {
             <button
               type="submit"
               disabled={isLoading}
-              onClick={handleSubmit}
               className="w-full text-white bg-[#2563EB] hover:bg-[#1D4ED8] py-3.5 px-4 rounded-xl font-bold shadow-[0_4px_12px_rgba(37,99,235,0.2)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
@@ -139,7 +138,7 @@ export default function Page() {
                 </>
               )}
             </button>
-          </div>
+          </form>
 
           {/* Sign Up Link */}
           <div className="text-center mt-6">

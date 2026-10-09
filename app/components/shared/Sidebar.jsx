@@ -6,34 +6,39 @@ import {
   Home,
   Package,
   Wallet,
-  Gift,
   PackageCheck,
   Menu,
   X,
   User,
   Users,
-  Package2,
   ShieldCheck,
   FolderTree,
   Boxes,
   LogOut,
+  RefreshCw,
+  Clock,
+  LayoutDashboard,
+  BarChart3,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuth } from "../AuthProvider";
+import { useTheme } from "../ThemeProvider";
 
 const navItems = [
-  { href: "/dashboard", label: "Overview", icon: Home },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/packages", label: "Market", icon: Package },
-  { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
   { href: "/dashboard/profile", label: "Profile", icon: User },
-  { href: "/dashboard/team", label: "Team", icon: Users },
+  { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
   { href: "/dashboard/my-packages", label: "Packages", icon: PackageCheck },
+  { href: "/dashboard/team", label: "Team", icon: Users },
   // { href: "/dashboard/subscription", label: "Subscription", icon: Package2 },
   // { href: "/dashboard/offers", label: "Upcoming Offers", icon: Gift },
 ];
 
 const adminNavItems = [
-  { href: "/dashboard", label: "Overview", icon: Home },
-  { href: "/dashboard/admin/users", label: "Users List", icon: Users },
+  { href: "/dashboard", label: "Overview", icon: BarChart3 },
+  { href: "/dashboard/admin/users", label: "Users", icon: Users },
   {
     href: "/dashboard/admin/categories",
     label: "Categories",
@@ -41,10 +46,11 @@ const adminNavItems = [
   },
   { href: "/dashboard/admin/packages", label: "Packages", icon: Boxes },
   { href: "/dashboard/admin/wallet", label: "Vault", icon: ShieldCheck },
+  { href: "/dashboard/admin/returns", label: "Returns", icon: RefreshCw },
   {
     href: "/dashboard/admin/transactions",
     label: "Transactions",
-    icon: PackageCheck,
+    icon: Clock,
   },
 ];
 
@@ -53,6 +59,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { logout, user, supabase } = useAuth();
+  const { theme, toggleTheme, mounted } = useTheme();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -112,14 +119,33 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* Logout Button */}
-      <div className="pt-6 border-t border-[#E2E8F0]">
+      {/* Theme Toggle & Logout */}
+      <div className="pt-4 border-t border-[#E2E8F0] space-y-2">
+        {mounted && (
+          <button
+            onClick={toggleTheme}
+            className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+          >
+            <span className="flex items-center">
+              {theme === "dark" ? (
+                <Moon className="w-[18px] h-[18px] mr-3 text-indigo-400" />
+              ) : (
+                <Sun className="w-[18px] h-[18px] mr-3 text-amber-500" />
+              )}
+              <span>{theme === "dark" ? "Dark Mode" : "Light Mode"}</span>
+            </span>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F1F5F9] text-[#64748B]">
+              {theme === "dark" ? "On" : "Off"}
+            </span>
+          </button>
+        )}
+
         <button
           onClick={() => {
             setIsOpen(false);
             logout();
           }}
-          className="flex w-full items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-[#EF4444] hover:bg-[#FEF2F2]"
+          className="flex w-full items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 text-[#EF4444] hover:bg-[#FEF2F2]"
         >
           <LogOut className="w-[18px] h-[18px] mr-3" />
           Logout

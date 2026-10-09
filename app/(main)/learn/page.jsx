@@ -108,10 +108,6 @@ export default function LearnPage() {
       {/* Hero Section */}
       <section className="relative px-6 md:px-12 lg:px-20 py-32 text-center overflow-hidden bg-[#F8FAFC]">
         <div className="relative z-10">
-          <div className="inline-flex items-center px-6 py-3 bg-blue-50 rounded-full border border-blue-100 mb-8 backdrop-blur-sm">
-            <Zap className="h-5 w-5 text-[#2563EB] mr-2" />
-            <span className="text-[#2563EB] font-bold">Smart Investment Platform</span>
-          </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight tracking-tight">
             Turn Your Money Into a{' '}

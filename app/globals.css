@@ -32,6 +32,138 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ========================================================
+   DASHBOARD-ONLY DARK MODE
+   Scoped strictly under .dashboard-dark
+   ======================================================== */
+.dashboard-dark {
+  --color-bg: #0B0F19;
+  --color-surface: #111827;
+  --color-text: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-border: #1E293B;
+  background-color: #0B0F19 !important;
+  color: #F8FAFC !important;
+}
+
+/* Backgrounds & Surfaces */
+.dashboard-dark .bg-white {
+  background-color: #111827 !important;
+}
+.dashboard-dark .bg-\[\#F8FAFC\] {
+  background-color: #0B0F19 !important;
+}
+.dashboard-dark .bg-\[\#F1F5F9\] {
+  background-color: #1E293B !important;
+}
+.dashboard-dark .hover\:bg-\[\#F8FAFC\]:hover {
+  background-color: #1F2937 !important;
+}
+.dashboard-dark .hover\:bg-\[\#F1F5F9\]:hover {
+  background-color: #26334D !important;
+}
+.dashboard-dark .hover\:bg-\[\#E2E8F0\]:hover {
+  background-color: #334155 !important;
+}
+
+/* Borders & Dividers */
+.dashboard-dark .border-\[\#E2E8F0\],
+.dashboard-dark .border-\[\#E2E8F0\]\/80,
+.dashboard-dark .border-slate-200 {
+  border-color: #1E293B !important;
+}
+.dashboard-dark .divide-\[\#F1F5F9\] > :not([hidden]) ~ :not([hidden]),
+.dashboard-dark .divide-\[\#E2E8F0\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1E293B !important;
+}
+
+/* Typography */
+.dashboard-dark .text-\[\#0F172A\] {
+  color: #F8FAFC !important;
+}
+.dashboard-dark .text-\[\#475569\] {
+  color: #94A3B8 !important;
+}
+.dashboard-dark .text-\[\#64748B\] {
+  color: #94A3B8 !important;
+}
+.dashboard-dark .text-\[\#94A3B8\] {
+  color: #64748B !important;
+}
+.dashboard-dark .hover\:text-\[\#0F172A\]:hover {
+  color: #FFFFFF !important;
+}
+
+/* Inputs, Selects, and Form controls in Dark Mode */
+.dashboard-dark input:not([type="checkbox"]):not([type="radio"]),
+.dashboard-dark select,
+.dashboard-dark textarea {
+  background-color: #1F2937 !important;
+  border-color: #374151 !important;
+  color: #F8FAFC !important;
+}
+.dashboard-dark input::placeholder,
+.dashboard-dark textarea::placeholder {
+  color: #64748B !important;
+}
+
+/* Table headers & sticky headers */
+.dashboard-dark thead,
+.dashboard-dark thead th,
+.dashboard-dark .bg-\[\#F8FAFC\].sticky {
+  background-color: #161F30 !important;
+  color: #94A3B8 !important;
+}
+
+/* Modals & Dialogs */
+.dashboard-dark .bg-white.rounded-2xl,
+.dashboard-dark .bg-white.rounded-xl {
+  background-color: #111827 !important;
+  border-color: #1E293B !important;
+}
+
+/* Step cards in BonusMissionCard */
+.dashboard-dark .bg-\[\#ECFDF5\] {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+.dashboard-dark .border-emerald-200 {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+.dashboard-dark .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+}
+.dashboard-dark .text-emerald-800 {
+  color: #34D399 !important;
+}
+.dashboard-dark .bg-slate-100 {
+  background-color: #1F2937 !important;
+}
+.dashboard-dark .text-slate-700 {
+  color: #CBD5E1 !important;
+}
+
+/* Wallet Payment Badges & Notice Boxes in Dark Mode */
+.dashboard-dark .bg-blue-50 {
+  background-color: rgba(37, 99, 235, 0.12) !important;
+}
+.dashboard-dark .border-blue-100 {
+  border-color: rgba(37, 99, 235, 0.25) !important;
+}
+.dashboard-dark .bg-\[\#FFFBEB\] {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+}
+.dashboard-dark .border-amber-100 {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Shadows */
+.dashboard-dark .shadow-\[0_2px_8px_rgba\(15\,23\,42\,0\.04\)\],
+.dashboard-dark .shadow-\[0_4px_16px_rgba\(15\,23\,42\,0\.08\)\],
+.dashboard-dark .shadow-\[0_2px_12px_rgba\(15\,23\,42\,0\.04\)\] {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
 /* Global input/select styling for light theme */
 input, select, textarea {
   color: var(--color-text);
@@ -66,7 +198,7 @@ input::placeholder, textarea::placeholder {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Phone input override for light theme */
+/* Phone input override */
 .PhoneInputInput {
   background: transparent !important;
   border: none !important;

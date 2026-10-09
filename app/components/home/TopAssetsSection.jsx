@@ -120,10 +120,6 @@ export default function TopAssetsSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100 mb-6">
-                        <TrendingUp className="h-4 w-4 text-[#2563EB]" />
-                        <span className="text-[#2563EB] text-sm font-bold">Top Performing Assets</span>
-                    </div>
                     <h2 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4">
                         Invest in Tomorrow's
                         <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent"> Winners</span>

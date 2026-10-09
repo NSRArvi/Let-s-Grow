@@ -12,8 +12,11 @@ import {
   Clock,
   Wallet,
   ArrowUpToLine,
-  ArrowDownToLine
+  ArrowDownToLine,
 } from "lucide-react";
+import LiquidityMetrics from "@/app/components/shared/LiquidityMetrics";
+import PackageMetrics from "@/app/components/shared/PackageMetrics";
+import Pagination from "@/app/components/shared/Pagination";
 
 export default function AdminTransactionsPage() {
   const { user, supabase } = useAuth();
@@ -22,17 +25,31 @@ export default function AdminTransactionsPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState([]);
-  const [stats, setStats] = useState({ totalIn: 0, totalOut: 0, reserve: 0 });
 
   // Filters
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterType, setFilterType] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
 
   useEffect(() => {
     if (user) {
       checkAdminAndFetch();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchTransactions();
+    }
+  }, [currentPage, filterStatus, filterType, dateFrom, dateTo, isAdmin]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus, filterType, dateFrom, dateTo]);
 
   const checkAdminAndFetch = async () => {
     setIsLoading(true);
@@ -50,7 +67,6 @@ export default function AdminTransactionsPage() {
       }
 
       setIsAdmin(true);
-      fetchTransactions();
     } catch (error) {
       console.error("Admin check failed:", error);
       router.push("/dashboard");
@@ -58,36 +74,37 @@ export default function AdminTransactionsPage() {
   };
 
   const fetchTransactions = async () => {
+    setIsLoading(true);
     try {
-      // Fetch all transactions
-      const { data, error } = await supabase
+      let query = supabase
         .from("transactions")
-        .select(
-          `
-                    *,
-                    profiles:user_id ( full_name, email )
-                `,
-        )
+        .select(`*, profiles:user_id ( full_name, email )`, { count: 'exact' });
+
+      if (filterStatus !== "all") query = query.eq("status", filterStatus);
+      if (filterType !== "all") query = query.eq("type", filterType);
+      
+      if (dateFrom) {
+        const from = new Date(dateFrom);
+        from.setHours(0, 0, 0, 0);
+        query = query.gte("created_at", from.toISOString());
+      }
+      if (dateTo) {
+        const to = new Date(dateTo);
+        to.setHours(23, 59, 59, 999);
+        query = query.lte("created_at", to.toISOString());
+      }
+
+      const from = (currentPage - 1) * 15;
+      const to = from + 14;
+
+      const { data, count, error } = await query
         .order("created_at", { ascending: false })
-        .limit(500); // Limit to last 500 for performance
+        .range(from, to);
 
       if (error) throw error;
       setTransactions(data || []);
-
-      // Calculate stats
-      const { data: allVerified } = await supabase
-        .from("transactions")
-        .select("type, amount_usd")
-        .eq("status", "verified")
-        .in("type", ["cash_in", "withdraw"]);
-
-      let totalIn = 0;
-      let totalOut = 0;
-      if (allVerified) {
-        totalIn = allVerified.filter(t => t.type === 'cash_in').reduce((a, b) => a + Number(b.amount_usd), 0);
-        totalOut = allVerified.filter(t => t.type === 'withdraw').reduce((a, b) => a + Number(b.amount_usd), 0);
-      }
-      setStats({ totalIn, totalOut, reserve: totalIn - totalOut });
+      setTotalRecords(count || 0);
+      setTotalPages(Math.ceil((count || 0) / 15));
 
     } catch (error) {
       console.error("Error fetching transactions:", error);
@@ -108,12 +125,7 @@ export default function AdminTransactionsPage() {
 
   if (!isAdmin) return null;
 
-  // Apply Filters
-  const filteredTxs = transactions.filter((tx) => {
-    const matchStatus = filterStatus === "all" || tx.status === filterStatus;
-    const matchType = filterType === "all" || tx.type === filterType;
-    return matchStatus && matchType;
-  });
+  if (!isAdmin) return null;
 
   const renderStatus = (status) => {
     switch (status) {
@@ -149,52 +161,19 @@ export default function AdminTransactionsPage() {
         </p>
       </div>
 
-      {/* Liquidity Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] relative overflow-hidden">
-              <div className="absolute -right-6 -top-6 text-[#2563EB]/5">
-                  <Wallet className="w-32 h-32" />
-              </div>
-              <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-2">
-                      <div className="bg-blue-50 p-2 rounded-lg">
-                          <Wallet className="w-5 h-5 text-[#2563EB]" />
-                      </div>
-                      <p className="text-sm text-[#475569] font-medium">Vault Reserve (Held in MFS)</p>
-                  </div>
-                  <h2 className="text-4xl font-bold text-[#0F172A]">${stats.reserve.toLocaleString('en-US')}</h2>
-              </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-              <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-[#ECFDF5] p-2 rounded-lg">
-                      <ArrowUpToLine className="w-5 h-5 text-[#10B981]" />
-                  </div>
-                  <p className="text-sm text-[#475569] font-medium">Total Lifetime Cash In</p>
-              </div>
-              <h2 className="text-3xl font-bold text-[#0F172A]">${stats.totalIn.toLocaleString('en-US')}</h2>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-              <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-[#FEF2F2] p-2 rounded-lg">
-                      <ArrowDownToLine className="w-5 h-5 text-[#EF4444]" />
-                  </div>
-                  <p className="text-sm text-[#475569] font-medium">Total Lifetime Cash Out</p>
-              </div>
-              <h2 className="text-3xl font-bold text-[#0F172A]">${stats.totalOut.toLocaleString('en-US')}</h2>
-          </div>
+      <div className="space-y-6">
+        <LiquidityMetrics />
+        <PackageMetrics />
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-sm flex flex-wrap gap-4 items-center">
+      <div className="bg-white p-4 rounded-xl border jus border-[#E2E8F0] shadow-sm flex flex-wrap gap-4 items-center">
         <div className="space-y-1">
           <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">
             Type
           </label>
           <select
-            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none"
+            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none block"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
           >
@@ -202,8 +181,32 @@ export default function AdminTransactionsPage() {
             <option value="cash_in">Cash In</option>
             <option value="withdraw">Withdraw</option>
             <option value="buy_package">Package Purchase</option>
-            <option value="profit_return">Profit Return</option>
+            <option value="package_return">Profit Return</option>
           </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">
+            From
+          </label>
+          <input
+            type="date"
+            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none block w-full"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">
+            To
+          </label>
+          <input
+            type="date"
+            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none block w-full"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+          />
         </div>
 
         <div className="space-y-1">
@@ -211,7 +214,7 @@ export default function AdminTransactionsPage() {
             Status
           </label>
           <select
-            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none"
+            className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] rounded-md px-3 py-2 text-sm focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none block"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -223,16 +226,18 @@ export default function AdminTransactionsPage() {
         </div>
 
         <div className="ml-auto text-sm text-[#475569] font-medium">
-          Showing {filteredTxs.length} records
+          Showing {transactions.length} of {totalRecords} records
         </div>
       </div>
 
       {/* Data Table */}
       <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
-          <h2 className="text-lg font-bold text-[#0F172A]">Transaction History</h2>
+          <h2 className="text-lg font-bold text-[#0F172A]">
+            Transaction History
+          </h2>
           <span className="bg-blue-50 text-[#2563EB] px-3 py-1 rounded-full text-xs font-bold border border-blue-100">
-            {transactions.length} Total Entries
+            {totalRecords} Total Entries
           </span>
         </div>
         <div className="overflow-x-auto">
@@ -247,14 +252,14 @@ export default function AdminTransactionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F1F5F9] text-[#475569]">
-              {filteredTxs.length === 0 && (
+              {transactions.length === 0 && (
                 <tr>
                   <td colSpan="5" className="py-12 text-center text-[#94A3B8]">
                     No transactions found matching criteria.
                   </td>
                 </tr>
               )}
-              {filteredTxs.map((tx) => (
+              {transactions.map((tx) => (
                 <tr
                   key={tx.id}
                   className="hover:bg-[#F8FAFC] transition-colors"
@@ -299,9 +304,11 @@ export default function AdminTransactionsPage() {
                   </td>
                   <td className="py-4 px-6">
                     <div
-                      className={`font-bold ${tx.type === "withdraw" || tx.type === "buy_package" ? "text-[#EF4444]" : "text-[#10B981]"}`}
+                      className={`font-bold ${tx.type === "withdraw" || tx.type === "package_return" || tx.type === "profit_return" ? "text-[#EF4444]" : "text-[#10B981]"}`}
                     >
-                      {tx.type === "withdraw" || tx.type === "buy_package"
+                      {tx.type === "withdraw" ||
+                      tx.type === "package_return" ||
+                      tx.type === "profit_return"
                         ? "-"
                         : "+"}
                       ${Number(tx.amount_usd).toLocaleString("en-US")}
@@ -316,6 +323,11 @@ export default function AdminTransactionsPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

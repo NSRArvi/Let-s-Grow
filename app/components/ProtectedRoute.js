@@ -17,11 +17,11 @@ export default function ProtectedRoute({ children }) {
   // Show loading spinner while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-emerald-900 flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-400"></div>
-          <span className="text-white font-medium">Loading...</span>
-        </div>
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-3">
+        <div className="w-9 h-9 rounded-full border-3 border-[#2563EB] border-t-transparent animate-spin"></div>
+        <span className="text-[#94A3B8] text-sm font-medium tracking-wide">
+          Loading...
+        </span>
       </div>
     );
   }

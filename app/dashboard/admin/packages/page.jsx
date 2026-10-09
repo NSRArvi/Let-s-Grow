@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/app/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Boxes, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, X, Pencil, Users } from "lucide-react";
+import { Boxes, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, X, Pencil, Users, Zap, Package, TrendingUp } from "lucide-react";
+import ConfirmModal from "@/app/components/shared/ConfirmModal";
+import Pagination from "@/app/components/shared/Pagination";
+import PackageMetrics from "@/app/components/shared/PackageMetrics";
 
 export default function AdminPackagesPage() {
     const { user, supabase } = useAuth();
@@ -20,9 +23,23 @@ export default function AdminPackagesPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
-    const fileInputRef = useRef(null);
     const [editingId, setEditingId] = useState(null);
     const [existingImageUrl, setExistingImageUrl] = useState("");
+    const fileInputRef = useRef(null);
+    
+    // Trigger to refresh metrics when packages are added/edited
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(0);
+
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [confirmModalData, setConfirmModalData] = useState({
+        isOpen: false,
+        id: null,
+        imageUrl: null
+    });
 
     // Buyers Modal State
     const [selectedPackageForBuyers, setSelectedPackageForBuyers] = useState(null);
@@ -46,6 +63,12 @@ export default function AdminPackagesPage() {
         }
     }, [user]);
 
+    useEffect(() => {
+        if (isAdmin) {
+            fetchPackages();
+        }
+    }, [currentPage, isAdmin]);
+
     const checkAdminAndFetch = async () => {
         setIsLoading(true);
         try {
@@ -62,7 +85,7 @@ export default function AdminPackagesPage() {
             }
 
             setIsAdmin(true);
-            await Promise.all([fetchPackages(), fetchCategories()]);
+            await fetchCategories();
         } catch (error) {
             console.error("Admin check failed:", error);
             router.push("/dashboard");
@@ -83,16 +106,22 @@ export default function AdminPackagesPage() {
 
     const fetchPackages = async () => {
         try {
-            const { data, error } = await supabase
+            const from = (currentPage - 1) * 15;
+            const to = from + 14;
+
+            const { data, count, error } = await supabase
                 .from("packages")
                 .select(`
                     *,
                     categories ( name )
-                `)
-                .order("created_at", { ascending: false });
+                `, { count: 'exact' })
+                .order("created_at", { ascending: false })
+                .range(from, to);
 
             if (error) throw error;
             setPackages(data || []);
+            setTotalRecords(count || 0);
+            setTotalPages(Math.ceil((count || 0) / 15));
         } catch (error) {
             console.error("Error fetching packages:", error);
             toast.error("Failed to load packages");
@@ -190,6 +219,7 @@ export default function AdminPackagesPage() {
             setIsModalOpen(false);
             resetForm();
             fetchPackages();
+            setRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error("Error saving package:", error);
             toast.error(error.message || "Failed to save package");
@@ -198,11 +228,15 @@ export default function AdminPackagesPage() {
         }
     };
 
-    const handleDelete = async (id, imageUrl) => {
-        if (!window.confirm("Are you sure you want to delete this package?")) {
-            return;
-        }
+    const handleDeleteClick = (id, imageUrl) => {
+        setConfirmModalData({ isOpen: true, id, imageUrl });
+    };
 
+    const executeDelete = async () => {
+        const { id, imageUrl } = confirmModalData;
+        if (!id) return;
+
+        setIsDeleting(true);
         try {
             if (imageUrl) {
                 const fileName = imageUrl.split('/').pop();
@@ -218,9 +252,13 @@ export default function AdminPackagesPage() {
 
             toast.success("Package deleted!");
             fetchPackages();
+            setRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error("Error deleting package:", error);
             toast.error(error.message || "Failed to delete package");
+        } finally {
+            setIsDeleting(false);
+            setConfirmModalData({ isOpen: false, id: null, imageUrl: null });
         }
     };
 
@@ -238,6 +276,9 @@ export default function AdminPackagesPage() {
         setImageFile(null);
         setImagePreview("");
         setExistingImageUrl("");
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     const openBuyersModal = async (pkg) => {
@@ -284,23 +325,27 @@ export default function AdminPackagesPage() {
                     </h1>
                     <p className="text-[#94A3B8] text-sm">Create investment packages and track buyers.</p>
                 </div>
-                <button
-                    onClick={() => {
-                        resetForm();
-                        setIsModalOpen(true);
-                    }}
-                    className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-blue-900/10 flex items-center gap-2 transition-colors"
-                >
-                    <Plus className="w-5 h-5" /> Add Package
-                </button>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => {
+                            resetForm();
+                            setIsModalOpen(true);
+                        }}
+                        className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-blue-900/10 flex items-center gap-2 transition-colors"
+                    >
+                        <Plus className="w-5 h-5" /> Add Package
+                    </button>
+                </div>
             </div>
+
+            <PackageMetrics refreshTrigger={refreshTrigger} />
 
             {/* Packages List */}
             <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
                 <div className="p-6 border-b border-[#E2E8F0] bg-[#F8FAFC] flex justify-between items-center">
                     <h2 className="text-lg font-bold text-[#0F172A]">Active Packages</h2>
                     <span className="bg-blue-50 text-[#2563EB] px-3 py-1 rounded-full text-xs font-bold border border-blue-100">
-                        {packages.length} Total
+                        {totalRecords} Total
                     </span>
                 </div>
                 <div className="overflow-x-auto">
@@ -381,7 +426,7 @@ export default function AdminPackagesPage() {
                                                     <Pencil className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(pkg.id, pkg.image_url)}
+                                                    onClick={() => handleDeleteClick(pkg.id, pkg.image_url)}
                                                     className="text-[#EF4444] hover:text-[#DC2626] p-2 hover:bg-red-50 rounded-lg transition-colors"
                                                     title="Delete Package"
                                                 >
@@ -395,6 +440,11 @@ export default function AdminPackagesPage() {
                         </tbody>
                     </table>
                 </div>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
         </div>
 

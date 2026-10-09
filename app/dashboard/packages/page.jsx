@@ -144,7 +144,7 @@ export default function PackagesPage() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all capitalize ${
                   selectedCategory === cat.id
                     ? "bg-[#2563EB] text-white"
                     : "bg-white text-[#475569] border border-[#E2E8F0] hover:border-[#94A3B8]"

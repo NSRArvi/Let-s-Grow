@@ -118,7 +118,7 @@ export default function Page() {
             <p className="text-[#94A3B8]">Start your investment journey today</p>
           </div>
 
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Input */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-[#0F172A] mb-2">
@@ -317,7 +317,6 @@ export default function Page() {
             <button
               type="submit"
               disabled={isLoading || !isPasswordValid || !passwordsMatch || !agreedToTerms}
-              onClick={handleSubmit}
               className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white py-3.5 px-4 rounded-xl font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_12px_rgba(37,99,235,0.2)] flex justify-center items-center gap-2"
             >
               {isLoading ? (
@@ -332,7 +331,7 @@ export default function Page() {
                 </>
               )}
             </button>
-          </div>
+          </form>
 
           {/* Sign In Link */}
           <div className="text-center mt-6">

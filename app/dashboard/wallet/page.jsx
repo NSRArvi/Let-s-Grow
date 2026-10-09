@@ -252,6 +252,7 @@ export default function WalletPage() {
       withdraw: `Withdraw to ${method}`,
       buy_package: `Package Investment`,
       package_return: `Package Return`,
+      bonus: `Welcome Bonus`,
     };
     return typeMap[type] || type;
   };
@@ -270,50 +271,54 @@ export default function WalletPage() {
       </div>
 
       {/* Balances */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] relative overflow-hidden">
-          <div className="absolute -right-4 -top-4 text-[#2563EB]/5">
-            <Wallet className="w-28 h-28" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] relative overflow-hidden flex items-center justify-between sm:block">
+          <div className="absolute -right-4 -top-4 text-[#2563EB]/5 hidden sm:block pointer-events-none">
+            <Wallet className="w-24 lg:w-28 h-24 lg:h-28" />
           </div>
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <Wallet className="w-4 h-4 text-[#2563EB]" />
+            <div className="flex items-center gap-2 mb-1 sm:mb-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2563EB]" />
               </div>
-              <p className="text-sm text-[#475569] font-medium">
-                Current Balance
+              <p className="text-xs sm:text-sm text-[#475569] font-medium">
+                Balance
               </p>
             </div>
-            <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">
+            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
               ${balance.toLocaleString("en-US")}
             </h2>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-[#ECFDF5] flex items-center justify-center">
-              <Banknote className="w-4 h-4 text-[#10B981]" />
+        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex items-center justify-between sm:block">
+          <div>
+            <div className="flex items-center gap-2 mb-1 sm:mb-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#ECFDF5] flex items-center justify-center shrink-0">
+                <Banknote className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#10B981]" />
+              </div>
+              <p className="text-xs sm:text-sm text-[#475569] font-medium">Invested</p>
             </div>
-            <p className="text-sm text-[#475569] font-medium">Total Invested</p>
+            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
+              ${totalInvested.toLocaleString("en-US")}
+            </h2>
           </div>
-          <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">
-            ${totalInvested.toLocaleString("en-US")}
-          </h2>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-[#FFFBEB] flex items-center justify-center">
-              <ArrowDownToLine className="w-4 h-4 text-[#F59E0B]" />
+        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex items-center justify-between sm:block">
+          <div>
+            <div className="flex items-center gap-2 mb-1 sm:mb-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#FFFBEB] flex items-center justify-center shrink-0">
+                <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B]" />
+              </div>
+              <p className="text-xs sm:text-sm text-[#475569] font-medium">
+                Withdrawn
+              </p>
             </div>
-            <p className="text-sm text-[#475569] font-medium">
-              Total Withdrawn
-            </p>
+            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
+              ${totalWithdrawn.toLocaleString("en-US")}
+            </h2>
           </div>
-          <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">
-            ${totalWithdrawn.toLocaleString("en-US")}
-          </h2>
         </div>
       </div>
 
@@ -332,7 +337,7 @@ export default function WalletPage() {
             <label className="text-sm text-[#0F172A] font-medium block">
               Select Method
             </label>
-            <div className="flex gap-2 flex-wrap">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <PaymentMethodBadge
                 method="bkash"
                 selected={cashIn.method === "bkash"}
@@ -442,7 +447,7 @@ export default function WalletPage() {
             <label className="text-sm text-[#0F172A] font-medium block">
               Receive Method
             </label>
-            <div className="flex gap-2 flex-wrap">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <PaymentMethodBadge
                 method="bkash"
                 selected={withdraw.method === "bkash"}

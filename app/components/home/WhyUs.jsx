@@ -12,10 +12,6 @@ export default function WhyUs() {
 
             <div className="relative z-10 max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
-                    <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 border border-blue-100 mb-6">
-                        <Target className="h-4 w-4 text-[#2563EB]" />
-                        <span className="text-[#2563EB] text-sm font-bold">Why Choose Us</span>
-                    </div>
                     <h2 className="text-4xl lg:text-6xl font-bold text-[#0F172A] mb-6">
                         Built for Consistent, Data-Driven Growth
                     </h2>
