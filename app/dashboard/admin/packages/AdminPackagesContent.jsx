@@ -238,9 +238,27 @@ export default function AdminPackagesPage() {
 
         setIsDeleting(true);
         try {
+            // Check if package has active buyer investments first
+            const { count: userPackagesCount, error: countErr } = await supabase
+                .from("user_packages")
+                .select("id", { count: "exact", head: true })
+                .eq("package_id", id);
+
+            if (countErr) {
+                console.warn("Could not check user_packages count:", countErr);
+            }
+
+            if (userPackagesCount && userPackagesCount > 0) {
+                throw new Error(`Cannot delete this package because ${userPackagesCount} user(s) currently own it. Try setting stock to 0 instead.`);
+            }
+
             if (imageUrl) {
-                const fileName = imageUrl.split('/').pop();
-                await supabase.storage.from('package-images').remove([fileName]);
+                try {
+                    const fileName = imageUrl.split('/').pop();
+                    await supabase.storage.from('package-images').remove([fileName]);
+                } catch (imgErr) {
+                    console.warn("Image delete warning:", imgErr);
+                }
             }
 
             const { error } = await supabase
@@ -248,9 +266,14 @@ export default function AdminPackagesPage() {
                 .delete()
                 .eq("id", id);
 
-            if (error) throw error;
+            if (error) {
+                if (error.code === "23503" || error.message?.includes("foreign key")) {
+                    throw new Error("Cannot delete this package because user purchases are linked to it. You can edit its stock to 0 to disable it.");
+                }
+                throw error;
+            }
 
-            toast.success("Package deleted!");
+            toast.success("Package deleted successfully!");
             fetchPackages();
             setRefreshTrigger(prev => prev + 1);
         } catch (error) {
@@ -723,6 +746,17 @@ export default function AdminPackagesPage() {
                     </div>
                 </div>
             )}
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmModal
+                isOpen={confirmModalData.isOpen}
+                onClose={() => setConfirmModalData({ isOpen: false, id: null, imageUrl: null })}
+                onConfirm={executeDelete}
+                title="Delete Package"
+                message="Are you sure you want to delete this package? This action cannot be undone."
+                confirmText="Yes, Delete"
+                isLoading={isDeleting}
+            />
         </>
     );
 }

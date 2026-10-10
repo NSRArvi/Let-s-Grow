@@ -15,6 +15,7 @@ import {
 import LiquidityMetrics from "@/app/components/shared/LiquidityMetrics";
 import ConfirmModal from "@/app/components/shared/ConfirmModal";
 import Pagination from "@/app/components/shared/Pagination";
+import AdminPaymentMethodsManager from "./AdminPaymentMethodsManager";
 
 export default function AdminWalletPage() {
   const { user, supabase } = useAuth();
@@ -129,12 +130,14 @@ export default function AdminWalletPage() {
 
     setProcessingId(id);
     try {
-      const { error } = await supabase
+      // Update transactions table directly.
+      // The single database trigger `tr_on_transaction_status_change` handles updating wallet_balance cleanly (1x).
+      const { error: updateError } = await supabase
         .from("transactions")
         .update({ status: newStatus })
         .eq("id", id);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
       toast.success(`Transaction ${newStatus} successfully!`);
 
@@ -143,13 +146,11 @@ export default function AdminWalletPage() {
         prev.map((t) => (t.id === id ? { ...t, status: newStatus } : t)),
       );
 
-      // Recalculate stats immediately if it was verified
-      if (newStatus === "verified") {
-        setRefreshTrigger(prev => prev + 1);
-      }
+      // Recalculate stats immediately
+      setRefreshTrigger((prev) => prev + 1);
     } catch (error) {
       console.error("Update failed:", error);
-      toast.error("Failed to update transaction");
+      toast.error(error.message || "Failed to update transaction");
     } finally {
       setProcessingId(null);
       setConfirmModalData({ isOpen: false, id: null, newStatus: null });
@@ -180,7 +181,7 @@ export default function AdminWalletPage() {
       <LiquidityMetrics refreshTrigger={refreshTrigger} />
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-[#E2E8F0] pb-4 pt-4">
+      <div className="flex flex-wrap gap-3 border-b border-[#E2E8F0] pb-4 pt-4">
         <button
           onClick={() => setActiveTab("cash_in")}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
@@ -213,16 +214,30 @@ export default function AdminWalletPage() {
             </span>
           )}
         </button>
+        <button
+          onClick={() => setActiveTab("payment_methods")}
+          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+            activeTab === "payment_methods"
+              ? "bg-[#2563EB] text-white shadow-lg shadow-blue-900/10"
+              : "bg-[#F8FAFC] text-[#475569] border border-[#E2E8F0] hover:bg-[#F1F5F9]"
+          }`}
+        >
+          <Wallet className="w-5 h-5" />
+          Payment Methods & Numbers
+        </button>
       </div>
 
-      {/* Data Table */}
-      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
-        <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
-          <h2 className="text-lg font-bold text-[#0F172A]">Recent Requests</h2>
-          <span className="bg-[#FFFBEB] text-[#B45309] px-3 py-1 rounded-full text-xs font-bold border border-amber-100">
-            {totalRecords} Total Entries
-          </span>
-        </div>
+      {activeTab === "payment_methods" ? (
+        <AdminPaymentMethodsManager supabase={supabase} />
+      ) : (
+        /* Data Table */
+        <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
+          <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
+            <h2 className="text-lg font-bold text-[#0F172A]">Recent Requests</h2>
+            <span className="bg-[#FFFBEB] text-[#B45309] px-3 py-1 rounded-full text-xs font-bold border border-amber-100">
+              {totalRecords} Total Entries
+            </span>
+          </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead className="text-xs uppercase tracking-wider text-[#475569] bg-white border-b border-[#E2E8F0]">
@@ -278,9 +293,15 @@ export default function AdminWalletPage() {
                     </td>
                     <td className="py-4 px-6">
                       <div className="font-bold text-[#0F172A]">
-                        ${Number(tx.amount_usd).toLocaleString("en-US")}
+                        ${Number(tx.amount_usd).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
+                      {tx.type === "withdraw" && (
+                        <div className="text-[11px] text-[#EF4444] font-medium">
+                          Fee (2%): -${Number(tx.fee_usd || (tx.amount_usd * 0.02)).toFixed(2)}
+                        </div>
+                      )}
                       <div className="text-xs text-[#2563EB] font-bold">
+                        {tx.type === "withdraw" ? "Payout: " : ""}
                         {Number(tx.amount_bdt).toLocaleString("en-US")} ৳
                       </div>
                     </td>
@@ -332,6 +353,7 @@ export default function AdminWalletPage() {
           onPageChange={setCurrentPage}
         />
       </div>
+      )}
       <ConfirmModal
         isOpen={confirmModalData.isOpen}
         onClose={() => setConfirmModalData({ isOpen: false, id: null, newStatus: null })}

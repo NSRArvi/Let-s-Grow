@@ -1,62 +1,64 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  ArrowUpToLine,
-  ArrowDownToLine,
-  Send,
-  Banknote,
-  Wallet,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-} from "lucide-react";
 import { useAuth } from "@/app/components/AuthProvider";
 import { useLanguage } from "@/app/components/context/LanguageContext";
 import toast from "react-hot-toast";
 
-// Payment Method Logos
-const PaymentMethodBadge = ({ method, selected, onClick }) => {
-  const names = {
-    bkash: "bKash",
-    nagad: "Nagad",
-    rocket: "Rocket",
-    binance: "Binance",
-  };
+// Separated components
+import WalletBalances from "./components/WalletBalances";
+import CashInForm from "./components/CashInForm";
+import WithdrawForm from "./components/WithdrawForm";
+import TransactionHistory from "./components/TransactionHistory";
 
-  return (
-    <button
-      type="button"
-      onClick={() => onClick(method)}
-      className={`relative p-2 rounded-xl transition-all border-2 flex flex-col items-center justify-center flex-1 h-16 ${
-        selected
-          ? "border-[#2563EB] bg-blue-50 scale-[1.02] ring-1 ring-[#2563EB]"
-          : "bg-white border-[#E2E8F0] hover:border-[#94A3B8]"
-      }`}
-    >
-      <div className="w-full h-full flex items-center justify-center gap-2">
-        <img
-          src={`/${method}.png`}
-          alt={names[method]}
-          className="h-6 w-6 object-contain"
-          onError={(e) => {
-            e.target.style.display = "none";
-          }}
-        />
-        <span
-          className={`text-sm font-bold ${selected ? "text-[#2563EB]" : "text-[#0F172A]"}`}
-        >
-          {names[method]}
-        </span>
-      </div>
-    </button>
-  );
-};
+// Fallback payment options in case DB is being initialized
+const DEFAULT_PAYMENT_METHODS = [
+  {
+    method_key: "bkash",
+    name: "bKash",
+    type: "phone",
+    account_number: "01554915902",
+    account_type: "Personal",
+    instructions: "Send Money to personal bKash number.",
+    is_active: true,
+  },
+  {
+    method_key: "nagad",
+    name: "Nagad",
+    type: "phone",
+    account_number: "01712345678",
+    account_type: "Personal",
+    instructions: "Send Money to personal Nagad number.",
+    is_active: true,
+  },
+  {
+    method_key: "rocket",
+    name: "Rocket",
+    type: "phone",
+    account_number: "01987654321",
+    account_type: "Personal",
+    instructions: "Send Money to personal Rocket number.",
+    is_active: true,
+  },
+  {
+    method_key: "binance",
+    name: "Binance",
+    type: "wallet_address",
+    account_number: "TDvWxxxxxxxxxxxxxx",
+    account_type: "TRC20 Wallet",
+    instructions: "Send USDT (TRC20) to this address.",
+    is_active: true,
+  },
+];
 
 export default function WalletPage() {
   const { user, supabase } = useAuth();
   const { t } = useLanguage();
+
+  const [paymentMethods, setPaymentMethods] = useState(DEFAULT_PAYMENT_METHODS);
+  const [selectedCashInMethod, setSelectedCashInMethod] = useState("bkash");
+  const [selectedWithdrawMethod, setSelectedWithdrawMethod] = useState("bkash");
+
   const [cashIn, setCashIn] = useState({
     method: "bkash",
     amount: "",
@@ -77,6 +79,33 @@ export default function WalletPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  // Fetch Payment Methods from Supabase
+  const fetchPaymentMethods = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("payment_methods")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+
+      if (error) {
+        // Table might not exist yet before running migration, use fallback silently
+        console.warn("Could not fetch payment_methods, using defaults:", error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setPaymentMethods(data);
+        setSelectedCashInMethod(data[0].method_key);
+        setSelectedWithdrawMethod(data[0].method_key);
+        setCashIn((prev) => ({ ...prev, method: data[0].method_key }));
+        setWithdraw((prev) => ({ ...prev, method: data[0].method_key }));
+      }
+    } catch (err) {
+      console.error("Error fetching payment methods:", err);
+    }
+  };
 
   const fetchExchangeRate = async () => {
     try {
@@ -135,6 +164,7 @@ export default function WalletPage() {
   useEffect(() => {
     setIsMounted(true);
     fetchExchangeRate();
+    fetchPaymentMethods();
   }, []);
 
   useEffect(() => {
@@ -146,13 +176,24 @@ export default function WalletPage() {
   const handleCashIn = async (e) => {
     e.preventDefault();
 
-    if (!cashIn.amount || cashIn.amount <= 0) {
+    const amountNum = Number(cashIn.amount);
+    if (!amountNum || isNaN(amountNum)) {
       toast.error("Please enter a valid amount.");
       return;
     }
 
+    if (amountNum < 20) {
+      toast.error("Minimum cash in amount is $20.");
+      return;
+    }
+
+    if (amountNum > 2000) {
+      toast.error("Maximum cash in amount is $2,000.");
+      return;
+    }
+
     setIsSubmitting(true);
-    const amountBdt = Math.floor(Number(cashIn.amount) * exchangeRate);
+    const amountBdt = Math.floor(amountNum * exchangeRate);
 
     try {
       const { error } = await supabase.from("transactions").insert({
@@ -160,7 +201,7 @@ export default function WalletPage() {
         type: "cash_in",
         amount_usd: cashIn.amount,
         amount_bdt: amountBdt,
-        method: cashIn.method,
+        method: selectedCashInMethod,
         payment_tx_id: cashIn.trxId,
       });
 
@@ -182,81 +223,86 @@ export default function WalletPage() {
   const handleWithdraw = async (e) => {
     e.preventDefault();
 
-    if (!withdraw.amount || withdraw.amount <= 0) {
+    const withdrawAmount = Number(withdraw.amount);
+    if (!withdrawAmount || isNaN(withdrawAmount)) {
       toast.error("Please enter a valid amount.");
       return;
     }
 
-    if (Number(withdraw.amount) > balance) {
+    if (withdrawAmount < 20) {
+      toast.error("Minimum withdraw amount is $20.");
+      return;
+    }
+
+    if (withdrawAmount > 2000) {
+      toast.error("Maximum withdraw amount is $2,000 per request.");
+      return;
+    }
+
+    if (withdrawAmount > balance) {
       toast.error("Insufficient wallet balance.");
       return;
     }
 
     setIsSubmitting(true);
-    const amountBdt = Math.floor(Number(withdraw.amount) * exchangeRate);
+    const feeUsd = Number((withdrawAmount * 0.02).toFixed(2));
+    const netUsd = Number((withdrawAmount - feeUsd).toFixed(2));
+    const amountBdt = Math.floor(netUsd * exchangeRate);
 
     try {
-      const { error } = await supabase.from("transactions").insert({
+      // Note: Do NOT deduct client-side here. Supabase database trigger `on_transaction_insert`
+      // already automatically deducts the withdrawal amount upon insert!
+      // Deducting here caused 2x deduction ($40 deducted instead of $20).
+
+      // 1. Insert transaction with fee and net amount (with graceful fallback if columns don't exist yet)
+      const txPayload = {
         user_id: user.id,
         type: "withdraw",
-        amount_usd: withdraw.amount,
+        amount_usd: withdrawAmount,
         amount_bdt: amountBdt,
-        method: withdraw.method,
+        fee_usd: feeUsd,
+        net_amount_usd: netUsd,
+        method: selectedWithdrawMethod,
         payment_tx_id: withdraw.number,
-      });
+      };
 
-      if (error) throw error;
+      let { error: txError } = await supabase
+        .from("transactions")
+        .insert(txPayload);
+
+      // If fee_usd/net_amount_usd column doesn't exist yet in Supabase, retry with standard payload
+      if (txError && (txError.message?.includes("column") || txError.code === "PGRST204" || txError.code === "42703")) {
+        console.warn("Retrying transaction insert without fee columns:", txError.message);
+        const fallbackPayload = {
+          user_id: user.id,
+          type: "withdraw",
+          amount_usd: withdrawAmount,
+          amount_bdt: amountBdt,
+          method: selectedWithdrawMethod,
+          payment_tx_id: withdraw.number,
+        };
+        const { error: fallbackError } = await supabase
+          .from("transactions")
+          .insert(fallbackPayload);
+        
+        txError = fallbackError;
+      }
+
+      if (txError) {
+        throw txError;
+      }
 
       toast.success(
-        "Withdraw request submitted! Waiting for admin verification.",
+        `Withdrawal of $${withdrawAmount.toFixed(2)} requested! $${feeUsd.toFixed(2)} platform fee applied.`,
       );
       setWithdraw({ ...withdraw, amount: "", number: "" });
       fetchWalletData();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to submit withdraw request.");
+      console.error("Withdrawal error details:", error);
+      toast.error(error.message || "Failed to submit withdraw request.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const calculateBDT = (usdAmount) => {
-    if (!usdAmount || isNaN(usdAmount)) return 0;
-    return Math.floor(Number(usdAmount) * exchangeRate).toLocaleString();
-  };
-
-  const renderStatus = (status) => {
-    switch (status) {
-      case "verified":
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ECFDF5] text-[#047857]">
-            <CheckCircle2 className="w-3 h-3" /> {t("walletPage.verified") || "Verified"}
-          </span>
-        );
-      case "rejected":
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FEF2F2] text-[#B91C1C]">
-            <XCircle className="w-3 h-3" /> {t("walletPage.rejected") || "Rejected"}
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FFFBEB] text-[#B45309]">
-            <Clock className="w-3 h-3" /> {t("walletPage.pending") || "Pending"}
-          </span>
-        );
-    }
-  };
-
-  const formatType = (type, method) => {
-    const typeMap = {
-      cash_in: `Cash In via ${method}`,
-      withdraw: `Withdraw to ${method}`,
-      buy_package: `Package Investment`,
-      package_return: `Package Return`,
-      bonus: `Welcome Bonus`,
-    };
-    return typeMap[type] || type;
   };
 
   if (!isMounted) {
@@ -266,368 +312,52 @@ export default function WalletPage() {
   return (
     <div className="space-y-8 animate-fadeInUp pb-10">
       <div>
-        <h1 className="text-2xl font-bold text-[#0F172A] mb-1">{t("walletPage.title") || "Wallet"}</h1>
+        <h1 className="text-2xl font-bold text-[#0F172A] mb-1">
+          {t("walletPage.title") || "Wallet"}
+        </h1>
         <p className="text-[#94A3B8] text-sm">
           {t("walletPage.subtitle") || "Manage your funds. Live Rate: 1 USD ="} {Math.floor(exchangeRate)} BDT
         </p>
       </div>
 
-      {/* Balances */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
-        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] relative overflow-hidden flex items-center justify-between sm:block">
-          <div className="absolute -right-4 -top-4 text-[#2563EB]/5 hidden sm:block pointer-events-none">
-            <Wallet className="w-24 lg:w-28 h-24 lg:h-28" />
-          </div>
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-1 sm:mb-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2563EB]" />
-              </div>
-              <p className="text-xs sm:text-sm text-[#475569] font-medium">
-                {t("walletPage.balance") || "Balance"}
-              </p>
-            </div>
-            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
-              ${balance.toLocaleString("en-US")}
-            </h2>
-          </div>
-        </div>
+      {/* 1. Balances Component */}
+      <WalletBalances
+        balance={balance}
+        totalInvested={totalInvested}
+        totalWithdrawn={totalWithdrawn}
+      />
 
-        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex items-center justify-between sm:block">
-          <div>
-            <div className="flex items-center gap-2 mb-1 sm:mb-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#ECFDF5] flex items-center justify-center shrink-0">
-                <Banknote className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#10B981]" />
-              </div>
-              <p className="text-xs sm:text-sm text-[#475569] font-medium">{t("walletPage.invested") || "Invested"}</p>
-            </div>
-            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
-              ${totalInvested.toLocaleString("en-US")}
-            </h2>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex items-center justify-between sm:block">
-          <div>
-            <div className="flex items-center gap-2 mb-1 sm:mb-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#FFFBEB] flex items-center justify-center shrink-0">
-                <ArrowDownToLine className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B]" />
-              </div>
-              <p className="text-xs sm:text-sm text-[#475569] font-medium">
-                {t("walletPage.withdrawn") || "Withdrawn"}
-              </p>
-            </div>
-            <h2 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#0F172A] tracking-tight">
-              ${totalWithdrawn.toLocaleString("en-US")}
-            </h2>
-          </div>
-        </div>
-      </div>
-
-      {/* Actions Grid */}
+      {/* 2. Actions Grid (Cash In & Withdraw Form Components) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-start">
-        {/* Cash In Form */}
-        <form
+        <CashInForm
+          paymentMethods={paymentMethods}
+          selectedMethod={selectedCashInMethod}
+          setSelectedMethod={setSelectedCashInMethod}
+          cashIn={cashIn}
+          setCashIn={setCashIn}
           onSubmit={handleCashIn}
-          className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] space-y-5 flex flex-col h-full"
-        >
-          <div className="flex items-center gap-3 text-[#2563EB] font-semibold text-lg border-b border-[#E2E8F0] pb-4">
-            <ArrowUpToLine className="w-5 h-5" /> {t("walletPage.cashIn") || "Cash In"}
-          </div>
+          isSubmitting={isSubmitting}
+          exchangeRate={exchangeRate}
+        />
 
-          <div className="space-y-2">
-            <label className="text-sm text-[#0F172A] font-medium block">
-              {t("walletPage.selectMethod") || "Select Method"}
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <PaymentMethodBadge
-                method="bkash"
-                selected={cashIn.method === "bkash"}
-                onClick={(m) => setCashIn({ ...cashIn, method: m })}
-              />
-              <PaymentMethodBadge
-                method="nagad"
-                selected={cashIn.method === "nagad"}
-                onClick={(m) => setCashIn({ ...cashIn, method: m })}
-              />
-              <PaymentMethodBadge
-                method="rocket"
-                selected={cashIn.method === "rocket"}
-                onClick={(m) => setCashIn({ ...cashIn, method: m })}
-              />
-              <PaymentMethodBadge
-                method="binance"
-                selected={cashIn.method === "binance"}
-                onClick={(m) => setCashIn({ ...cashIn, method: m })}
-              />
-            </div>
-          </div>
-
-          <div className="text-sm text-[#475569] bg-blue-50 border border-blue-100 p-4 rounded-xl">
-            <p>
-              Send your exact amount to{" "}
-              <strong className="text-[#0F172A] block my-1 text-lg">
-                {cashIn.method === "bkash" && "01554915902 (Personal)"}
-                {cashIn.method === "nagad" && "01712345678 (Personal)"}
-                {cashIn.method === "rocket" && "01987654321 (Personal)"}
-                {cashIn.method === "binance" && "TDvW... (TRC20 Wallet)"}
-              </strong>{" "}
-              via <span className="capitalize text-[#2563EB] font-bold">{cashIn.method}</span> first.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">
-                {t("walletPage.amountUSD") || "Amount (USD)"}
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
-                  $
-                </span>
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  className="w-full bg-white text-[#0F172A] p-3 pl-8 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] outline-none transition-all"
-                  value={cashIn.amount}
-                  onChange={(e) =>
-                    setCashIn({ ...cashIn, amount: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">
-                You Pay (BDT)
-              </label>
-              <div className="w-full bg-[#F8FAFC] text-[#2563EB] p-3 rounded-xl border border-[#E2E8F0] font-bold flex items-center justify-between">
-                <span>{calculateBDT(cashIn.amount)}</span>
-                <span className="text-xs text-[#94A3B8]">৳</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-1.5 mt-auto pt-2">
-            <label className="text-sm text-[#0F172A] font-medium block">
-              {t("walletPage.transactionId") || "Transaction ID (TrxID)"}
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. 9G3X2M8L"
-              className="w-full bg-white text-[#0F172A] p-3 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] outline-none transition-all font-mono"
-              value={cashIn.trxId}
-              onChange={(e) => setCashIn({ ...cashIn, trxId: e.target.value })}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] transition-colors text-white py-3.5 rounded-xl font-semibold disabled:opacity-50 flex justify-center items-center gap-2"
-          >
-            {isSubmitting ? (
-              <RefreshCw className="w-5 h-5 animate-spin" />
-            ) : (
-              t("walletPage.submitCashIn") || "Submit Cash In Request"
-            )}
-          </button>
-        </form>
-
-        {/* Withdraw Form */}
-        <form
+        <WithdrawForm
+          paymentMethods={paymentMethods}
+          selectedMethod={selectedWithdrawMethod}
+          setSelectedMethod={setSelectedWithdrawMethod}
+          withdraw={withdraw}
+          setWithdraw={setWithdraw}
           onSubmit={handleWithdraw}
-          className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] space-y-5 flex flex-col h-full"
-        >
-          <div className="flex items-center gap-3 text-[#F59E0B] font-semibold text-lg border-b border-[#E2E8F0] pb-4">
-            <ArrowDownToLine className="w-5 h-5" /> {t("walletPage.withdrawFunds") || "Withdraw"}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm text-[#0F172A] font-medium block">
-              {t("walletPage.selectMethod") || "Receive Method"}
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <PaymentMethodBadge
-                method="bkash"
-                selected={withdraw.method === "bkash"}
-                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
-              />
-              <PaymentMethodBadge
-                method="nagad"
-                selected={withdraw.method === "nagad"}
-                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
-              />
-              <PaymentMethodBadge
-                method="rocket"
-                selected={withdraw.method === "rocket"}
-                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
-              />
-              <PaymentMethodBadge
-                method="binance"
-                selected={withdraw.method === "binance"}
-                onClick={(m) => setWithdraw({ ...withdraw, method: m })}
-              />
-            </div>
-          </div>
-
-          <div className="text-sm text-[#475569] bg-[#FFFBEB] border border-amber-100 p-4 rounded-xl">
-            <p>
-              Funds will be sent to your selected account after admin
-              verification.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">
-                {t("walletPage.amountUSD") || "Amount (USD)"}
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
-                  $
-                </span>
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  max={balance}
-                  className="w-full bg-white text-[#0F172A] p-3 pl-8 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all"
-                  value={withdraw.amount}
-                  onChange={(e) =>
-                    setWithdraw({ ...withdraw, amount: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm text-[#0F172A] font-medium block">
-                You Receive (BDT)
-              </label>
-              <div className="w-full bg-[#F8FAFC] text-[#F59E0B] p-3 rounded-xl border border-[#E2E8F0] font-bold flex items-center justify-between">
-                <span>{calculateBDT(withdraw.amount)}</span>
-                <span className="text-xs text-[#94A3B8]">৳</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-1.5 mt-auto pt-2">
-            <label className="text-sm text-[#0F172A] font-medium block">
-              {t("walletPage.walletNumber") || "Account / Wallet Number"}
-            </label>
-            <input
-              type="text"
-              placeholder="Where should we send it?"
-              className="w-full bg-white text-[#0F172A] p-3 rounded-xl border border-[#E2E8F0] focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all font-mono"
-              value={withdraw.number}
-              onChange={(e) =>
-                setWithdraw({ ...withdraw, number: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting || balance <= 0 || !withdraw.amount}
-            className="w-full bg-[#F59E0B] hover:bg-[#D97706] transition-colors text-white py-3.5 rounded-xl font-semibold disabled:opacity-50 flex justify-center items-center gap-2"
-          >
-            {isSubmitting ? (
-              <RefreshCw className="w-5 h-5 animate-spin" />
-            ) : (
-              t("walletPage.requestWithdrawal") || "Submit Withdraw Request"
-            )}
-          </button>
-        </form>
+          isSubmitting={isSubmitting}
+          balance={balance}
+          exchangeRate={exchangeRate}
+        />
       </div>
 
-      {/* Transaction History */}
-      <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] overflow-hidden">
-        <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-[#0F172A]">
-            {t("walletPage.transactionHistory") || "Transaction History"}
-          </h2>
-          {isLoading && (
-            <RefreshCw className="w-4 h-4 text-[#2563EB] animate-spin" />
-          )}
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs uppercase tracking-wider text-[#94A3B8] bg-[#F8FAFC] border-b border-[#E2E8F0]">
-              <tr>
-                <th scope="col" className="py-3.5 px-6 font-medium">
-                  Type
-                </th>
-                <th scope="col" className="py-3.5 px-6 font-medium">
-                  Amount
-                </th>
-                <th scope="col" className="py-3.5 px-6 font-medium">
-                  Status
-                </th>
-                <th scope="col" className="py-3.5 px-6 font-medium">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#F1F5F9]">
-              {transactions.length === 0 && !isLoading && (
-                <tr>
-                  <td colSpan="4" className="py-12 text-center text-[#94A3B8]">
-                    {t("walletPage.noTransactions") || "No transactions yet."}
-                  </td>
-                </tr>
-              )}
-              {transactions.map((tx) => (
-                <tr
-                  key={tx.id}
-                  className="hover:bg-[#F8FAFC] transition-colors"
-                >
-                  <td className="py-4 px-6">
-                    <div className="font-medium text-[#0F172A] capitalize">
-                      {formatType(tx.type, tx.method)}
-                    </div>
-                    {tx.payment_tx_id && (
-                      <div className="text-xs text-[#94A3B8] mt-1 font-mono">
-                        ID: {tx.payment_tx_id}
-                      </div>
-                    )}
-                  </td>
-                  <td className="py-4 px-6">
-                    <div
-                      className={`font-bold ${tx.type === "withdraw" || tx.type === "buy_package" ? "text-[#EF4444]" : "text-[#10B981]"}`}
-                    >
-                      {tx.type === "withdraw" || tx.type === "buy_package"
-                        ? "-"
-                        : "+"}{" "}
-                      ${Number(tx.amount_usd).toLocaleString()}
-                    </div>
-                    <div className="text-xs text-[#94A3B8] mt-1">
-                      {Number(tx.amount_bdt).toLocaleString()} ৳
-                    </div>
-                  </td>
-                  <td className="py-4 px-6">{renderStatus(tx.status)}</td>
-                  <td className="py-4 px-6 text-[#475569]">
-                    {new Date(tx.created_at).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                    <div className="text-xs text-[#94A3B8] mt-1">
-                      {new Date(tx.created_at).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* 3. Transaction History Component */}
+      <TransactionHistory
+        transactions={transactions}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

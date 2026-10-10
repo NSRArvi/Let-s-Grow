@@ -118,7 +118,7 @@ export default function ProfilePage() {
   return (
     <div className="space-y-8 animate-fadeInUp pb-10 mt-6 lg:mt-0">
       {/* Header */}
-      <div className="flex justify-between md:items-center gap-4">
+      <div className="flex justify-between items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[#0F172A] mb-1">{t("profilePage.title") || "Profile"}</h1>
         <p className="text-[#94A3B8] text-sm">
@@ -131,8 +131,8 @@ export default function ProfilePage() {
               <CheckCircle className="w-4 h-4" /> {t("profilePage.verified") || "Verified"} {t("profilePage.title") || "Profile"}
             </div>
           ) : (
-            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-4 py-2 rounded-xl transition-colors font-medium text-sm">
-              <Edit2 className="w-4 h-4" /> {t("profilePage.editProfile") || "Edit"}
+            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white p-3 md:px-4 md:py-2  rounded-full md:rounded-xl transition-colors font-medium text-sm">
+              <Edit2 className="w-4 h-4" /> <span className="hidden md:block"> {t("profilePage.editProfile") || "Edit"}</span>
             </button>
           )
         ) : (
