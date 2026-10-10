@@ -2,8 +2,10 @@
 import React from 'react';
 import { TrendingUp, Mail, Phone, MapPin, Twitter, Facebook, Instagram, Linkedin, Shield, Award, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="bg-white border-t border-[#E2E8F0] relative overflow-hidden pt-16">
       {/* Background Elements */}
@@ -26,7 +28,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-[#475569] mb-8 max-w-md font-medium leading-relaxed">
-              Empowering investors with AI-driven insights and blockchain technology. Build your digital wealth with confidence, transparency, and security.
+              {t("footer.desc", "Empowering investors with AI-driven insights and blockchain technology. Build your digital wealth with confidence, transparency, and security.")}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="bg-[#F8FAFC] text-[#475569] hover:text-[#2563EB] hover:bg-blue-50 transition-all p-3 rounded-xl border border-[#E2E8F0]">
@@ -46,25 +48,25 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#0F172A] font-bold mb-6 text-lg">Platform</h3>
+            <h3 className="text-[#0F172A] font-bold mb-6 text-lg">{t("footer.platform", "Platform")}</h3>
             <ul className="space-y-4">
-              <li><Link href="/invest" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Start Investing</Link></li>
-              <li><Link href="/portfolio" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">View Portfolio</Link></li>
-              <li><Link href="/leaderboard" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Leaderboard</Link></li>
-              <li><Link href="/learn" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Learn & Earn</Link></li>
-              <li><Link href="/about" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">About Us</Link></li>
+              <li><Link href="/invest" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.startInvesting", "Start Investing")}</Link></li>
+              <li><Link href="/portfolio" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.viewPortfolio", "View Portfolio")}</Link></li>
+              <li><Link href="/leaderboard" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.leaderboard", "Leaderboard")}</Link></li>
+              <li><Link href="/learn" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.learnEarn", "Learn & Earn")}</Link></li>
+              <li><Link href="/about" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.aboutUs", "About Us")}</Link></li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h3 className="text-[#0F172A] font-bold mb-6 text-lg">Support</h3>
+            <h3 className="text-[#0F172A] font-bold mb-6 text-lg">{t("footer.support", "Support")}</h3>
             <ul className="space-y-4">
-              <li><Link href="/help" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Help Center</Link></li>
-              <li><Link href="/contact" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Contact Us</Link></li>
-              <li><Link href="/faq" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">FAQ</Link></li>
-              <li><Link href="/security" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Security</Link></li>
-              <li><Link href="/terms" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">Legal Terms</Link></li>
+              <li><Link href="/help" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.helpCenter", "Help Center")}</Link></li>
+              <li><Link href="/contact" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.contactUs", "Contact Us")}</Link></li>
+              <li><Link href="/faq" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.faq", "FAQ")}</Link></li>
+              <li><Link href="/security" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.security", "Security")}</Link></li>
+              <li><Link href="/terms" className="text-[#475569] hover:text-[#2563EB] transition-colors font-medium">{t("footer.terms", "Legal Terms")}</Link></li>
             </ul>
           </div>
         </div>
@@ -77,8 +79,8 @@ export default function Footer() {
                 <Shield className="h-6 w-6 text-[#2563EB]" />
               </div>
               <div>
-                <h4 className="text-[#0F172A] font-bold">Bank-Level Security</h4>
-                <p className="text-[#475569] text-sm font-medium mt-1">256-bit SSL encryption</p>
+                <h4 className="text-[#0F172A] font-bold">{t("footer.bankSecurity", "Bank-Level Security")}</h4>
+                <p className="text-[#475569] text-sm font-medium mt-1">{t("footer.ssl", "256-bit SSL encryption")}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -86,8 +88,8 @@ export default function Footer() {
                 <Award className="h-6 w-6 text-[#10B981]" />
               </div>
               <div>
-                <h4 className="text-[#0F172A] font-bold">Regulated Platform</h4>
-                <p className="text-[#475569] text-sm font-medium mt-1">Licensed & Insured</p>
+                <h4 className="text-[#0F172A] font-bold">{t("footer.regulatedPlatform", "Regulated Platform")}</h4>
+                <p className="text-[#475569] text-sm font-medium mt-1">{t("footer.licensed", "Licensed & Insured")}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -95,8 +97,8 @@ export default function Footer() {
                 <Users className="h-6 w-6 text-[#F59E0B]" />
               </div>
               <div>
-                <h4 className="text-[#0F172A] font-bold">1M+ Investors</h4>
-                <p className="text-[#475569] text-sm font-medium mt-1">Trusted worldwide</p>
+                <h4 className="text-[#0F172A] font-bold">{t("footer.trustedInvestors", "1M+ Investors")}</h4>
+                <p className="text-[#475569] text-sm font-medium mt-1">{t("footer.trustedWorldwide", "Trusted worldwide")}</p>
               </div>
             </div>
           </div>
@@ -123,14 +125,14 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-4">
           <p className="text-[#94A3B8] text-sm mb-4 md:mb-0 text-center md:text-left font-medium">
-            © {new Date().getFullYear()} Let's Grow. All rights reserved. | Powered by advanced FinTech infrastructure
+            © {new Date().getFullYear()} Let's Grow. {t("footer.rights", "All rights reserved.")}
           </p>
           <div className="flex space-x-6 text-sm font-medium">
             <Link href="/privacy" className="text-[#94A3B8] hover:text-[#2563EB] transition-colors">
-              Privacy Policy
+              {t("footer.terms", "Privacy Policy")}
             </Link>
             <Link href="/terms" className="text-[#94A3B8] hover:text-[#2563EB] transition-colors">
-              Terms of Service
+              {t("footer.terms", "Terms of Service")}
             </Link>
             <Link href="/cookies" className="text-[#94A3B8] hover:text-[#2563EB] transition-colors">
               Cookie Policy

@@ -1,6 +1,11 @@
+"use client";
+import React from "react";
 import { CheckCircle, Briefcase, TrendingUp, Building2 } from "lucide-react";
+import { useLanguage } from "../../components/context/LanguageContext";
 
 export default function Portfolio() {
+    const { t } = useLanguage();
+
     const projects = [
         {
             title: "GreenWave Ventures",
@@ -25,22 +30,19 @@ export default function Portfolio() {
         },
     ];
 
-    const highlights = [
-        { title: "Avg Monthly ROI", value: "8.6%", note: "Across all investment packages" },
-        { title: "Fastest Growing Sector", value: "AI Trading", note: "142% YoY growth" },
-        { title: "Total Users", value: "1.2M+", note: "Global Investors" },
-        { title: "Withdrawals Processed", value: "$9.3M+", note: "In last 6 months" },
-    ];
     return (
         <section className="min-h-[80vh] bg-[#F1F5F9] flex items-center overflow-hidden py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
                 {/* Header */}
                 <div className="text-center space-y-4">
                     <h2 className="text-4xl md:text-5xl font-bold text-[#0F172A]">
-                        Our <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">Portfolio</span>
+                        {t("portfolio.portfolioTitle", "Our")}{" "}
+                        <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
+                            {t("portfolio.portfolioHighlight", "Portfolio")}
+                        </span>
                     </h2>
                     <p className="text-[#475569] text-lg max-w-2xl mx-auto font-medium">
-                        See how Let's Grow is empowering innovation through intelligent investments in real-world businesses and technologies.
+                        {t("portfolio.portfolioSubtitle", "See how Let's Grow is empowering innovation through intelligent investments in real-world businesses and technologies.")}
                     </p>
                 </div>
 
@@ -70,32 +72,31 @@ export default function Portfolio() {
                             <TrendingUp className="text-[#2563EB] h-8 w-8" />
                         </div>
                         <h4 className="text-3xl font-bold text-[#0F172A] mb-1">$7.2M+</h4>
-                        <p className="text-[#475569] text-sm font-medium">Total Capital Deployed</p>
+                        <p className="text-[#475569] text-sm font-medium">{t("portfolio.totalCapitalDeployed", "Total Capital Deployed")}</p>
                     </div>
                     <div>
                         <div className="bg-[#ECFDF5] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Briefcase className="text-[#10B981] h-8 w-8" />
                         </div>
                         <h4 className="text-3xl font-bold text-[#0F172A] mb-1">20+</h4>
-                        <p className="text-[#475569] text-sm font-medium">Projects Funded</p>
+                        <p className="text-[#475569] text-sm font-medium">{t("portfolio.projectsFunded", "Projects Funded")}</p>
                     </div>
                     <div>
                         <div className="bg-[#FFFBEB] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Building2 className="text-[#F59E0B] h-8 w-8" />
                         </div>
                         <h4 className="text-3xl font-bold text-[#0F172A] mb-1">8</h4>
-                        <p className="text-[#475569] text-sm font-medium">Industries Touched</p>
+                        <p className="text-[#475569] text-sm font-medium">{t("portfolio.industriesTouched", "Industries Touched")}</p>
                     </div>
                     <div>
                         <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <CheckCircle className="text-[#2563EB] h-8 w-8" />
                         </div>
                         <h4 className="text-3xl font-bold text-[#0F172A] mb-1">92%</h4>
-                        <p className="text-[#475569] text-sm font-medium">Success Rate</p>
+                        <p className="text-[#475569] text-sm font-medium">{t("portfolio.successRate", "Success Rate")}</p>
                     </div>
                 </div>
             </div>
         </section>
-
-    )
+    );
 }

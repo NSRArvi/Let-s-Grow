@@ -24,32 +24,34 @@ import {
 } from "lucide-react";
 import { useAuth } from "../AuthProvider";
 import { useTheme } from "../ThemeProvider";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/packages", label: "Market", icon: Package },
-  { href: "/dashboard/profile", label: "Profile", icon: User },
-  { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
-  { href: "/dashboard/my-packages", label: "Packages", icon: PackageCheck },
-  { href: "/dashboard/team", label: "Team", icon: Users },
-  // { href: "/dashboard/subscription", label: "Subscription", icon: Package2 },
-  // { href: "/dashboard/offers", label: "Upcoming Offers", icon: Gift },
+  { href: "/dashboard", key: "nav.dashboard", fallback: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/packages", key: "nav.market", fallback: "Market", icon: Package },
+  { href: "/dashboard/profile", key: "nav.profile", fallback: "Profile", icon: User },
+  { href: "/dashboard/wallet", key: "nav.wallet", fallback: "Wallet", icon: Wallet },
+  { href: "/dashboard/my-packages", key: "nav.packages", fallback: "Packages", icon: PackageCheck },
+  { href: "/dashboard/team", key: "nav.team", fallback: "Team", icon: Users },
 ];
 
 const adminNavItems = [
-  { href: "/dashboard", label: "Overview", icon: BarChart3 },
-  { href: "/dashboard/admin/users", label: "Users", icon: Users },
+  { href: "/dashboard", key: "nav.overview", fallback: "Overview", icon: BarChart3 },
+  { href: "/dashboard/admin/users", key: "nav.users", fallback: "Users", icon: Users },
   {
     href: "/dashboard/admin/categories",
-    label: "Categories",
+    key: "nav.categories",
+    fallback: "Categories",
     icon: FolderTree,
   },
-  { href: "/dashboard/admin/packages", label: "Packages", icon: Boxes },
-  { href: "/dashboard/admin/wallet", label: "Vault", icon: ShieldCheck },
-  { href: "/dashboard/admin/returns", label: "Returns", icon: RefreshCw },
+  { href: "/dashboard/admin/packages", key: "nav.adminPackages", fallback: "Packages", icon: Boxes },
+  { href: "/dashboard/admin/wallet", key: "nav.vault", fallback: "Vault", icon: ShieldCheck },
+  { href: "/dashboard/admin/returns", key: "nav.returns", fallback: "Returns", icon: RefreshCw },
   {
     href: "/dashboard/admin/transactions",
-    label: "Transactions",
+    key: "nav.transactions",
+    fallback: "Transactions",
     icon: Clock,
   },
 ];
@@ -60,6 +62,7 @@ export default function Sidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { logout, user, supabase } = useAuth();
   const { theme, toggleTheme, mounted } = useTheme();
+  const { t } = useLanguage();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -87,7 +90,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="space-y-1 flex-1">
         {(isAdmin ? adminNavItems : navItems).map(
-          ({ href, label, icon: Icon }) => {
+          ({ href, key, fallback, icon: Icon }) => {
             const isActive = pathname === href;
             return (
               <Link
@@ -112,31 +115,47 @@ export default function Sidebar() {
                       : "text-[#94A3B8]"
                   }`}
                 />
-                {label}
+                {t(key, fallback)}
               </Link>
             );
           },
         )}
       </nav>
 
-      {/* Theme Toggle & Logout */}
+      {/* Language Switcher, Theme Toggle & Logout */}
       <div className="pt-4 border-t border-[#E2E8F0] space-y-2">
+        <LanguageSwitcher variant="sidebar" />
+
         {mounted && (
           <button
+            type="button"
+            role="switch"
+            aria-checked={theme === "dark"}
             onClick={toggleTheme}
-            className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+            className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A] group"
           >
             <span className="flex items-center">
               {theme === "dark" ? (
-                <Moon className="w-[18px] h-[18px] mr-3 text-indigo-400" />
+                <Moon className="w-[18px] h-[18px] mr-3 text-indigo-400 transition-colors" />
               ) : (
-                <Sun className="w-[18px] h-[18px] mr-3 text-amber-500" />
+                <Sun className="w-[18px] h-[18px] mr-3 text-amber-500 transition-colors" />
               )}
-              <span>{theme === "dark" ? "Dark Mode" : "Light Mode"}</span>
+              <span>{theme === "dark" ? t("common.darkMode", "Dark Mode") : t("common.lightMode", "Light Mode")}</span>
             </span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F1F5F9] text-[#64748B]">
-              {theme === "dark" ? "On" : "Off"}
-            </span>
+
+            {/* Toggle Switch */}
+            <div
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                theme === "dark" ? "bg-indigo-600" : "bg-slate-200"
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  theme === "dark" ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </div>
           </button>
         )}
 
@@ -148,7 +167,7 @@ export default function Sidebar() {
           className="flex w-full items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 text-[#EF4444] hover:bg-[#FEF2F2]"
         >
           <LogOut className="w-[18px] h-[18px] mr-3" />
-          Logout
+          {t("common.logout", "Logout")}
         </button>
       </div>
     </div>

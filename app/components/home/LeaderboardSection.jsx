@@ -1,16 +1,19 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Trophy, Crown, Medal, TrendingUp, Users, Star, ArrowUp, Zap, Target } from 'lucide-react';
+import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function LeaderboardSection() {
+    const { t } = useLanguage();
     const [selectedPeriod, setSelectedPeriod] = useState('monthly');
     const [animatedValues, setAnimatedValues] = useState({});
     const [isVisible, setIsVisible] = useState(false);
 
     const periods = [
-        { id: 'weekly', label: 'Weekly', active: false },
-        { id: 'monthly', label: 'Monthly', active: true },
-        { id: 'yearly', label: 'Yearly', active: false }
+        { id: 'weekly', key: 'home.weekly', label: 'Weekly' },
+        { id: 'monthly', key: 'home.monthly', label: 'Monthly' },
+        { id: 'yearly', key: 'home.yearly', label: 'Yearly' }
     ];
 
     const leaderboardData = {
@@ -378,15 +381,15 @@ export default function LeaderboardSection() {
                 <div className={`text-center mb-16 ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}>
 
                     <h2 className="text-4xl lg:text-6xl font-bold mb-6 text-[#0F172A]">
-                        Investment
+                        {t("home.leaderboardTitle", "Investment")}
                         <br />
                         <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
-                            Leaderboard
+                            {t("home.leaderboardHighlight", "Leaderboard")}
                         </span>
                     </h2>
 
                     <p className="text-xl text-[#475569] max-w-2xl mx-auto font-medium">
-                        See how our top investors are performing and get inspired by their success stories
+                        {t("home.leaderboardSubtitle", "See how our top investors are performing and get inspired by their success stories")}
                     </p>
                 </div>
 
@@ -403,7 +406,7 @@ export default function LeaderboardSection() {
                                         : 'text-[#475569] hover:text-[#0F172A] hover:bg-white'
                                         }`}
                                 >
-                                    {period.label}
+                                    {t(period.key, period.label)}
                                 </button>
                             ))}
                         </div>
@@ -419,7 +422,7 @@ export default function LeaderboardSection() {
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-[#0F172A]">1,247</div>
-                                <div className="text-[#475569] font-medium">Active Traders</div>
+                                <div className="text-[#475569] font-medium">{t("home.activeTraders", "Active Traders")}</div>
                             </div>
                         </div>
                     </div>
@@ -431,7 +434,7 @@ export default function LeaderboardSection() {
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-[#0F172A]">+89.2%</div>
-                                <div className="text-[#475569] font-medium">Avg Returns</div>
+                                <div className="text-[#475569] font-medium">{t("home.avgReturn", "Avg Returns")}</div>
                             </div>
                         </div>
                     </div>
@@ -443,7 +446,7 @@ export default function LeaderboardSection() {
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-[#0F172A]">92.4%</div>
-                                <div className="text-[#475569] font-medium">Success Rate</div>
+                                <div className="text-[#475569] font-medium">{t("home.accuracy", "Accuracy")}</div>
                             </div>
                         </div>
                     </div>
@@ -454,12 +457,12 @@ export default function LeaderboardSection() {
                     {/* Header */}
                     <div className="hidden md:block bg-[#F8FAFC] p-6 border-b border-[#E2E8F0]">
                         <div className="grid grid-cols-12 gap-4 text-sm font-bold text-[#475569] uppercase tracking-wider">
-                            <div className="col-span-1 text-center">Rank</div>
-                            <div className="col-span-3">Trader</div>
-                            <div className="col-span-2">Returns</div>
-                            <div className="col-span-2">Profit</div>
-                            <div className="col-span-2">Accuracy</div>
-                            <div className="col-span-1 text-center">Streak</div>
+                            <div className="col-span-1 text-center">{t("home.rank", "Rank")}</div>
+                            <div className="col-span-3">{t("home.investor", "Trader")}</div>
+                            <div className="col-span-2">{t("home.avgReturn", "Returns")}</div>
+                            <div className="col-span-2">{t("home.profit", "Profit")}</div>
+                            <div className="col-span-2">{t("home.accuracy", "Accuracy")}</div>
+                            <div className="col-span-1 text-center">{t("home.streak", "Streak")}</div>
                             <div className="col-span-1 text-center">Badge</div>
                         </div>
                     </div>
@@ -543,15 +546,17 @@ export default function LeaderboardSection() {
                 <div className={`text-center mt-12 ${isVisible ? 'animate-fadeInUp delay-500' : 'opacity-0'}`}>
                     <div className="bg-blue-50 rounded-2xl p-8 border border-blue-100 shadow-sm">
                         <h3 className="text-2xl font-bold text-[#0F172A] mb-4">
-                            Ready to Join the Elite?
+                            {t("home.leaderboardCtaTitle", "Ready to Join the Elite?")}
                         </h3>
                         <p className="text-[#475569] mb-6 max-w-2xl mx-auto font-medium">
-                            Start your investment journey today and compete with the best traders in the world.
-                            Our AI-powered platform gives you the tools to succeed.
+                            {t("home.leaderboardCtaDesc", "Start your investment journey today and compete with the best traders in the world. Our AI-powered platform gives you the tools to succeed.")}
                         </p>
-                        <button className="bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)]">
-                            Start Trading Now
-                        </button>
+                        <Link
+                            href="/auth/register"
+                            className="inline-block bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)]"
+                        >
+                            {t("home.leaderboardCtaBtn", "Start Trading Now")}
+                        </Link>
                     </div>
                 </div>
             </div>

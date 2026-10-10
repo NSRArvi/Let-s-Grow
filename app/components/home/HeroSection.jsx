@@ -13,8 +13,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function HeroSection() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -59,9 +61,9 @@ export default function HeroSection() {
 
             {/* Catchy, Punchy Headline without subtitle */}
             <h1 className="text-3xl sm:text-5xl lg:text-[62px] font-extrabold tracking-tight text-[#0F172A] leading-[1.12] sm:leading-[1.1]">
-              Invest Smart. Earn Daily.{" "}
+              {t("home.heroTitlePrefix", "Invest Smart. Earn Daily.")}{" "}
               <span className="bg-gradient-to-r from-[#2563EB] via-indigo-600 to-[#10B981] bg-clip-text text-transparent block mt-1">
-                Withdraw Instantly.
+                {t("home.heroTitleHighlight", "Withdraw Instantly.")}
               </span>
             </h1>
 
@@ -71,7 +73,7 @@ export default function HeroSection() {
                 href="/auth/register"
                 className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 shadow-[0_10px_25px_-5px_rgba(37,99,235,0.4)] hover:shadow-[0_12px_28px_-4px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2.5 active:scale-95"
               >
-                <p> <span className="hidden sm:block">Get Started with</span> $20 Bonus</p>
+                <p> <span className="hidden sm:inline">{t("home.heroBonusBtn", "Get Started with")} </span>{t("home.heroBonusText", "$20 Bonus")}</p>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -79,7 +81,7 @@ export default function HeroSection() {
                 className="group bg-white hover:bg-slate-50 text-[#0F172A] px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base border border-[#E2E8F0] shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-2.5"
               >
                 <Play className="w-3.5 h-3.5 text-[#2563EB] fill-[#2563EB]" />
-                <p> <span className="hidden sm:block">Browse</span> Packages</p>
+                <p>{t("home.browsePackages", "Browse Packages")}</p>
               </Link>
             </div>
 
@@ -89,19 +91,19 @@ export default function HeroSection() {
                 <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0F172A] tracking-tight">
                   $20<span className="text-[#2563EB] font-bold">+</span>
                 </div>
-                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">Starter Bonus</div>
+                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">{t("home.starterBonus", "Starter Bonus")}</div>
               </div>
               <div className="text-center lg:text-left">
                 <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#10B981] tracking-tight">
-                  Up to 65%
+                  {t("home.upTo", "Up to 65%")}
                 </div>
-                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">Fixed Returns</div>
+                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">{t("home.fixedReturns", "Fixed Returns")}</div>
               </div>
               <div className="text-center lg:text-left">
                 <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#2563EB] tracking-tight">
                   Instant
                 </div>
-                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">Direct Payouts</div>
+                <div className="text-[11px] sm:text-xs text-[#64748B] font-medium">{t("home.instantPayouts", "Direct Payouts")}</div>
               </div>
             </div>
           </div>
@@ -122,7 +124,7 @@ export default function HeroSection() {
               </div>
               <div>
                 <p className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-wider">
-                  24h Payout Volume
+                  {t("home.payoutVolume", "24h Payout Volume")}
                 </p>
                 <p className="text-xs sm:text-sm font-extrabold text-[#0F172A]">$148,920.00</p>
               </div>
@@ -135,10 +137,10 @@ export default function HeroSection() {
               </div>
               <div>
                 <p className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-wider">
-                  Verified Security
+                  {t("home.verifiedSecurity", "Verified Security")}
                 </p>
                 <p className="text-xs sm:text-sm font-extrabold text-[#10B981] flex items-center gap-1">
-                  Protected Escrow <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {t("home.regulated", "Regulated")} <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 </p>
               </div>
             </div>
@@ -188,7 +190,7 @@ export default function HeroSection() {
                 <div className="flex justify-between items-start mb-3 sm:mb-4">
                   <div>
                     <span className="text-[10px] sm:text-[11px] text-white/80 font-medium tracking-wide uppercase">
-                      Plan: {packagesPreview[activeTab].period}
+                      {t("home.cycle", "Plan")}: {packagesPreview[activeTab].period}
                     </span>
                     <h4 className="text-lg sm:text-xl font-extrabold">{packagesPreview[activeTab].name}</h4>
                   </div>
@@ -199,11 +201,11 @@ export default function HeroSection() {
 
                 <div className="grid grid-cols-2 gap-2 pt-2.5 sm:pt-3 border-t border-white/20">
                   <div>
-                    <span className="text-[10px] sm:text-[11px] text-white/70 block">Investment</span>
+                    <span className="text-[10px] sm:text-[11px] text-white/70 block">{t("home.minDeposit", "Investment")}</span>
                     <span className="text-base sm:text-lg font-bold">{packagesPreview[activeTab].price}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] sm:text-[11px] text-white/70 block">Estimated Return</span>
+                    <span className="text-[10px] sm:text-[11px] text-white/70 block">{t("home.estReturn", "Estimated Return")}</span>
                     <span className="text-base sm:text-lg font-bold text-amber-200">
                       {packagesPreview[activeTab].returnVal}
                     </span>

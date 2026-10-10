@@ -1,7 +1,12 @@
-import React from 'react'
-import { Trophy, Crown, Medal, TrendingUp, Users, Star, ArrowUp, Zap, Target } from 'lucide-react';
+"use client";
+import React from 'react';
+import { TrendingUp, Users, Star } from 'lucide-react';
+import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WhyUs() {
+    const { t } = useLanguage();
+
     return (
         <section className="py-24 bg-white relative overflow-hidden border-t border-[#E2E8F0]">
             {/* Background blur circles */}
@@ -13,10 +18,10 @@ export default function WhyUs() {
             <div className="relative z-10 max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-6xl font-bold text-[#0F172A] mb-6">
-                        Built for Consistent, Data-Driven Growth
+                        {t("home.whyTitle", "Built for Consistent, Data-Driven Growth")}
                     </h2>
                     <p className="text-xl text-[#475569] max-w-2xl mx-auto font-medium">
-                        Investing shouldn’t be a gamble. We help you grow wealth with intelligent, transparent strategies backed by real data — not hype.
+                        {t("home.whySubtitle", "Investing shouldn't be a gamble. We help you grow wealth with intelligent, transparent strategies backed by real data — not hype.")}
                     </p>
                 </div>
 
@@ -26,10 +31,12 @@ export default function WhyUs() {
                             <div className="bg-blue-100 p-2 rounded-lg">
                                 <TrendingUp className="h-6 w-6 text-[#2563EB]" />
                             </div>
-                            <h4 className="text-lg font-bold text-[#0F172A]">Compounding Returns</h4>
+                            <h4 className="text-lg font-bold text-[#0F172A]">
+                                {t("home.compoundingReturns", "Compounding Returns")}
+                            </h4>
                         </div>
                         <p className="text-[#475569] font-medium">
-                            Our investors see up to <span className="text-[#10B981] font-bold">+98% monthly ROI</span> — thanks to data-backed decisions and precision execution.
+                            {t("home.compoundingDesc", "Our investors see up to +98% monthly ROI — thanks to data-backed decisions and precision execution.")}
                         </p>
                     </div>
 
@@ -38,10 +45,12 @@ export default function WhyUs() {
                             <div className="bg-[#ECFDF5] p-2 rounded-lg">
                                 <Star className="h-6 w-6 text-[#10B981]" />
                             </div>
-                            <h4 className="text-lg font-bold text-[#0F172A]">AI-Powered Insights</h4>
+                            <h4 className="text-lg font-bold text-[#0F172A]">
+                                {t("home.aiInsights", "AI-Powered Insights")}
+                            </h4>
                         </div>
                         <p className="text-[#475569] font-medium">
-                            Our proprietary AI identifies trends before they break out — giving you an edge in every trade.
+                            {t("home.aiInsightsDesc", "Our proprietary AI identifies trends before they break out — giving you an edge in every trade.")}
                         </p>
                     </div>
 
@@ -50,21 +59,25 @@ export default function WhyUs() {
                             <div className="bg-blue-100 p-2 rounded-lg">
                                 <Users className="h-6 w-6 text-[#2563EB]" />
                             </div>
-                            <h4 className="text-lg font-bold text-[#0F172A]">Elite Trading Community</h4>
+                            <h4 className="text-lg font-bold text-[#0F172A]">
+                                {t("home.eliteCommunity", "Elite Trading Community")}
+                            </h4>
                         </div>
                         <p className="text-[#475569] font-medium">
-                            You’ll trade alongside the top <span className="text-[#2563EB] font-bold">1%</span> of global investors — visible on our real-time leaderboard.
+                            {t("home.eliteCommunityDesc", "You'll trade alongside the top 1% of global investors — visible on our real-time leaderboard.")}
                         </p>
                     </div>
                 </div>
 
                 <div className="text-center">
-                    <button className="bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:bg-[#1D4ED8] transition-all duration-200">
-                        Join the Growth Revolution
-                    </button>
+                    <Link
+                        href="/auth/register"
+                        className="inline-block bg-[#2563EB] text-white px-8 py-4 rounded-xl font-bold shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:bg-[#1D4ED8] transition-all duration-200"
+                    >
+                        {t("home.joinRevolution", "Join the Growth Revolution")}
+                    </Link>
                 </div>
             </div>
         </section>
-
-    )
+    );
 }

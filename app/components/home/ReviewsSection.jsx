@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Star, Quote, ArrowLeft, ArrowRight, TrendingUp, Shield, Users } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ReviewsSection() {
+  const { t } = useLanguage();
   const [currentReview, setCurrentReview] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -102,11 +104,13 @@ export default function ReviewsSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4">
-            What Our Investors
-            <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent"> Say</span>
+            {t("home.reviewsTitle", "What Our Investors")}{" "}
+            <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
+              {t("home.reviewsHighlight", "Say")}
+            </span>
           </h2>
           <p className="text-xl text-[#475569] max-w-3xl mx-auto font-medium">
-            Join thousands of satisfied investors who've transformed their financial future with Let's Grow
+            {t("home.reviewsSubtitle", "Join thousands of satisfied investors who've transformed their financial future with Let's Grow")}
           </p>
         </div>
 
@@ -158,7 +162,7 @@ export default function ReviewsSection() {
                           {reviews[currentReview].returns}
                         </div>
                         <div className="text-[#475569] text-sm font-medium">
-                          {reviews[currentReview].timeframe}
+                          {t("home.clientReturns", "Total Returns")}
                         </div>
                       </div>
                     </div>
@@ -206,22 +210,22 @@ export default function ReviewsSection() {
             <div className="space-y-6">
               {/* Performance Stats */}
               <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm">
-                <h3 className="text-[#0F172A] font-bold mb-4">Investment Performance</h3>
+                <h3 className="text-[#0F172A] font-bold mb-4">{t("home.marketSummary", "Investment Performance")}</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-[#475569] font-medium">Total Invested</span>
+                    <span className="text-[#475569] font-medium">{t("home.minDeposit", "Total Invested")}</span>
                     <span className="text-[#2563EB] font-bold">
                       {reviews[currentReview].investment}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[#475569] font-medium">Total Returns</span>
+                    <span className="text-[#475569] font-medium">{t("home.clientReturns", "Total Returns")}</span>
                     <span className="text-[#10B981] font-bold">
                       {reviews[currentReview].returns}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[#475569] font-medium">Duration</span>
+                    <span className="text-[#475569] font-medium">{t("home.cycle", "Duration")}</span>
                     <span className="text-[#0F172A] font-bold">
                       {reviews[currentReview].timeframe}
                     </span>
@@ -231,15 +235,15 @@ export default function ReviewsSection() {
 
               {/* Trust Indicators */}
               <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm">
-                <h3 className="text-[#0F172A] font-bold mb-4">Why Investors Trust Us</h3>
+                <h3 className="text-[#0F172A] font-bold mb-4">{t("footer.bankSecurity", "Why Investors Trust Us")}</h3>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <div className="bg-blue-50 rounded-full p-2">
                       <TrendingUp className="h-4 w-4 text-[#2563EB]" />
                     </div>
                     <div>
-                      <div className="text-[#0F172A] font-bold">89% Success Rate</div>
-                      <div className="text-[#475569] text-sm font-medium">Average ROI</div>
+                      <div className="text-[#0F172A] font-bold">89% {t("home.accuracy", "Success Rate")}</div>
+                      <div className="text-[#475569] text-sm font-medium">{t("home.avgReturn", "Average ROI")}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -247,8 +251,8 @@ export default function ReviewsSection() {
                       <Shield className="h-4 w-4 text-[#10B981]" />
                     </div>
                     <div>
-                      <div className="text-[#0F172A] font-bold">Bank-Level Security</div>
-                      <div className="text-[#475569] text-sm font-medium">256-bit encryption</div>
+                      <div className="text-[#0F172A] font-bold">{t("footer.bankSecurity", "Bank-Level Security")}</div>
+                      <div className="text-[#475569] text-sm font-medium">{t("footer.ssl", "256-bit encryption")}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">

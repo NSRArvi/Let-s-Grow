@@ -3,17 +3,20 @@ import React, { useState, useEffect } from 'react';
 import { TrendingUp, Menu, X, User, Bell } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
   
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/portfolio", label: "Portfolio" },
-    { href: "/leaderboard", label: "Leaderboard" },
-    { href: "/learn", label: "Learn" },
+    { href: "/", key: "nav.home", fallback: "Home" },
+    { href: "/portfolio", key: "nav.portfolio", fallback: "Portfolio" },
+    { href: "/leaderboard", key: "nav.leaderboard", fallback: "Leaderboard" },
+    { href: "/learn", key: "nav.learn", fallback: "Learn" },
   ];
 
   // Handle scroll effect
@@ -41,7 +44,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8 bg-white/50 backdrop-blur-md px-6 py-2.5 rounded-full border border-[#E2E8F0] shadow-sm">
-            {navLinks.map(({ href, label }) => (
+            {navLinks.map(({ href, key, fallback }) => (
               <Link
                 key={href}
                 href={href}
@@ -51,13 +54,15 @@ export default function Navbar() {
                     : "text-[#475569] font-medium hover:text-[#0F172A]"
                 } transition-colors text-sm`}
               >
-                {label}
+                {t(key, fallback)}
               </Link>
             ))}
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
+            <LanguageSwitcher />
+
             <button className="text-[#475569] hover:text-[#2563EB] transition-colors p-2 rounded-xl hover:bg-blue-50 relative">
               <Bell className="h-5 w-5" />
               <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#EF4444] rounded-full animate-pulse border-2 border-white"></div>
@@ -72,17 +77,20 @@ export default function Navbar() {
               href="/auth/register"
               className="bg-[#2563EB] text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-lg shadow-blue-900/10 text-sm"
             >
-              Get Started
+              {t("common.getStarted", "Get Started")}
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-[#0F172A] hover:text-[#2563EB] transition-colors p-2 rounded-xl bg-white shadow-sm border border-[#E2E8F0]"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="md:hidden flex items-center space-x-2">
+            <LanguageSwitcher />
+            <button
+              className="text-[#0F172A] hover:text-[#2563EB] transition-colors p-2 rounded-xl bg-white shadow-sm border border-[#E2E8F0]"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -90,7 +98,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b border-[#E2E8F0] shadow-xl absolute w-full left-0 top-full">
           <div className="px-4 py-6 space-y-2">
-            {navLinks.map(({ href, label }) => (
+            {navLinks.map(({ href, key, fallback }) => (
               <Link
                 key={href}
                 href={href}
@@ -101,7 +109,7 @@ export default function Navbar() {
                     : "text-[#475569] hover:bg-[#F8FAFC] font-medium"
                 } transition-colors`}
               >
-                {label}
+                {t(key, fallback)}
               </Link>
             ))}
 
@@ -114,14 +122,14 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 bg-[#F8FAFC] text-[#0F172A] px-4 py-3 rounded-xl font-bold border border-[#E2E8F0]"
               >
                 <User className="h-5 w-5" />
-                Go to Dashboard
+                {t("nav.dashboard", "Dashboard")}
               </Link>
               <Link
                 href="/auth/register"
                 onClick={()=> setIsMenuOpen(false)}
                 className="flex items-center justify-center bg-[#2563EB] text-white px-4 py-3 rounded-xl font-bold shadow-lg shadow-blue-900/10"
               >
-                Get Started Today
+                {t("common.getStarted", "Get Started")}
               </Link>
             </div>
           </div>

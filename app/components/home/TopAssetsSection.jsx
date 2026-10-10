@@ -1,8 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, ArrowRight, Star, Zap, DollarSign } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import Link from 'next/link';
 
 export default function TopAssetsSection() {
+    const { t } = useLanguage();
     const [selectedAsset, setSelectedAsset] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -121,11 +124,13 @@ export default function TopAssetsSection() {
                 {/* Section Header */}
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4">
-                        Invest in Tomorrow's
-                        <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent"> Winners</span>
+                        {t("home.topAssetsTitle", "Invest in Tomorrow's")}{" "}
+                        <span className="bg-gradient-to-r from-[#2563EB] to-[#10B981] bg-clip-text text-transparent">
+                            {t("home.topAssetsHighlight", "Winners")}
+                        </span>
                     </h2>
                     <p className="text-xl text-[#475569] max-w-3xl mx-auto font-medium">
-                        Our AI analyzes thousands of digital assets to identify the most promising investment opportunities
+                        {t("home.topAssetsSubtitle", "Our AI analyzes thousands of digital assets to identify the most promising investment opportunities")}
                     </p>
                 </div>
 
@@ -175,15 +180,15 @@ export default function TopAssetsSection() {
 
                                 <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
                                     <div>
-                                        <p className="text-[#94A3B8] font-medium">Volume</p>
+                                        <p className="text-[#94A3B8] font-medium">{t("home.volume", "Volume")}</p>
                                         <p className="text-[#0F172A] font-bold">{asset.volume}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[#94A3B8] font-medium">Market Cap</p>
+                                        <p className="text-[#94A3B8] font-medium">{t("home.marketCap", "Market Cap")}</p>
                                         <p className="text-[#0F172A] font-bold">{asset.marketCap}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[#94A3B8] font-medium">Risk Level</p>
+                                        <p className="text-[#94A3B8] font-medium">{t("home.riskLevel", "Risk Level")}</p>
                                         <p className={`font-bold ${asset.risk === 'Low' ? 'text-[#10B981]' :
                                                 asset.risk === 'Medium' ? 'text-[#F59E0B]' : 'text-[#EF4444]'
                                             }`}>{asset.risk}</p>
@@ -224,11 +229,11 @@ export default function TopAssetsSection() {
                             {/* Price Info */}
                             <div className="space-y-4 mb-6 bg-[#F8FAFC] p-4 rounded-xl border border-[#E2E8F0]">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-[#475569] font-medium">Current Price</span>
+                                    <span className="text-[#475569] font-medium">{t("home.currentPrice", "Current Price")}</span>
                                     <span className="text-[#0F172A] font-bold text-xl">{assets[selectedAsset].price}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-[#475569] font-medium">24h Change</span>
+                                    <span className="text-[#475569] font-medium">{t("home.change24h", "24h Change")}</span>
                                     <span className={`font-bold ${assets[selectedAsset].isPositive ? 'text-[#10B981]' : 'text-[#EF4444]'
                                         }`}>
                                         {assets[selectedAsset].change} ({assets[selectedAsset].changeValue})
@@ -238,32 +243,35 @@ export default function TopAssetsSection() {
 
                             {/* Action Buttons */}
                             <div className="space-y-3">
-                                <button className="w-full bg-[#2563EB] text-white py-3.5 px-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)] flex items-center justify-center space-x-2">
+                                <Link
+                                    href="/auth/register"
+                                    className="w-full bg-[#2563EB] text-white py-3.5 px-4 rounded-xl font-bold hover:bg-[#1D4ED8] transition-all duration-200 shadow-[0_4px_12px_rgba(37,99,235,0.2)] flex items-center justify-center space-x-2"
+                                >
                                     <DollarSign className="h-5 w-5" />
-                                    <span>Invest Now</span>
-                                </button>
+                                    <span>{t("home.investNow", "Invest Now")}</span>
+                                </Link>
                                 <button className="w-full bg-white text-[#0F172A] py-3.5 px-4 rounded-xl font-bold border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm">
                                     <Zap className="h-5 w-5 text-[#2563EB]" />
-                                    <span>Add to Watchlist</span>
+                                    <span>{t("home.addToWatchlist", "Add to Watchlist")}</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Market Summary */}
                         <div className="bg-white rounded-xl p-6 border border-[#E2E8F0] shadow-sm">
-                            <h4 className="text-[#0F172A] font-bold mb-4">Market Summary</h4>
+                            <h4 className="text-[#0F172A] font-bold mb-4">{t("home.marketSummary", "Market Summary")}</h4>
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span className="text-[#475569] font-medium">Total Market Cap</span>
+                                    <span className="text-[#475569] font-medium">{t("home.totalMarketCap", "Total Market Cap")}</span>
                                     <span className="text-[#0F172A] font-bold">$1.2T</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-[#475569] font-medium">24h Volume</span>
+                                    <span className="text-[#475569] font-medium">{t("home.change24h", "24h Volume")}</span>
                                     <span className="text-[#0F172A] font-bold">$45.2B</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-[#475569] font-medium">Market Sentiment</span>
-                                    <span className="text-[#10B981] font-bold">Bullish</span>
+                                    <span className="text-[#475569] font-medium">{t("home.marketSentiment", "Market Sentiment")}</span>
+                                    <span className="text-[#10B981] font-bold">{t("home.bullish", "Bullish")}</span>
                                 </div>
                             </div>
                         </div>
