@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 import { LanguageProvider } from "./components/context/LanguageContext";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <Toaster position="top-center" />
             {children}
+            <Analytics />
           </AuthProvider>
         </LanguageProvider>
       </body>
