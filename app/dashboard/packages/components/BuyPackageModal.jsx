@@ -67,26 +67,40 @@ export default function BuyPackageModal({
       }}
     >
       <div className="bg-white border border-[#E2E8F0] rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col my-auto transform transition-all duration-300">
-        {/* Header with image banner */}
-        <div className="relative bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#3B82F6] text-white p-6 pb-8 overflow-hidden">
-          {/* Subtle geometric circles decoration */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-          <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-400/20 rounded-full blur-xl" />
+        {/* Header with real package image banner */}
+        <div className="relative min-h-[160px] text-white p-6 pb-9 overflow-hidden bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#3B82F6] flex flex-col justify-end">
+          {packageItem.image_url ? (
+            <>
+              <img
+                src={packageItem.image_url}
+                alt={packageItem.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Dark gradient overlay so text is crisp and readable */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-900/30 backdrop-blur-[1px]" />
+            </>
+          ) : (
+            <>
+              {/* Subtle geometric circles decoration for fallback */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-400/20 rounded-full blur-xl" />
+            </>
+          )}
 
           {/* Close button */}
           <button
             type="button"
             onClick={onClose}
             disabled={isBuying}
-            className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/15 hover:bg-white/25 rounded-full p-2 transition-colors disabled:opacity-50"
+            className="absolute top-4 right-4 text-white/90 hover:text-white bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full p-2 transition-colors disabled:opacity-50 z-10"
             title="Close"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Top category & audit status */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 backdrop-blur-md uppercase tracking-wider text-white">
+          <div className="relative z-10 flex items-center gap-2 mb-2">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 backdrop-blur-md uppercase tracking-wider text-white border border-white/20">
               {packageItem.categories?.name || "Premium Plan"}
             </span>
             <span className="inline-flex items-center gap-1 text-[11px] text-blue-100 font-medium">
@@ -95,10 +109,10 @@ export default function BuyPackageModal({
             </span>
           </div>
 
-          <h2 className="text-2xl font-black tracking-tight text-white mb-1">
+          <h2 className="relative z-10 text-2xl font-black tracking-tight text-white mb-1 drop-shadow-md">
             {packageItem.name}
           </h2>
-          <p className="text-xs text-blue-100/90 flex items-center gap-1.5">
+          <p className="relative z-10 text-xs text-blue-100/90 flex items-center gap-1.5 drop-shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             Automatic return calculation & daily ledger accrual
           </p>

@@ -104,7 +104,7 @@ export default function WithdrawForm({
 
       {/* Amount input & Fee Breakdown */}
       <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
               <label className="text-sm text-[#0F172A] font-medium block">
