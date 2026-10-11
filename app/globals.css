@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --color-primary: #2563EB;
@@ -123,7 +124,7 @@ body {
   border-color: #1E293B !important;
 }
 
-/* Step cards in BonusMissionCard */
+/* Step cards & details in BonusMissionCard */
 .dashboard-dark .bg-\[\#ECFDF5\] {
   background-color: rgba(16, 185, 129, 0.1) !important;
 }
@@ -136,11 +137,40 @@ body {
 .dashboard-dark .text-emerald-800 {
   color: #34D399 !important;
 }
+.dashboard-dark .text-emerald-600 {
+  color: #34D399 !important;
+}
+.dashboard-dark .bg-emerald-50,
+.dashboard-dark .bg-emerald-50\/50 {
+  background-color: rgba(6, 78, 59, 0.2) !important;
+}
+.dashboard-dark .border-emerald-500\/20,
+.dashboard-dark .border-emerald-500\/30 {
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+.dashboard-dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+.dashboard-dark .text-indigo-600 {
+  color: #818CF8 !important;
+}
+.dashboard-dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+}
+.dashboard-dark .text-purple-600 {
+  color: #C084FC !important;
+}
 .dashboard-dark .bg-slate-100 {
   background-color: #1F2937 !important;
 }
 .dashboard-dark .text-slate-700 {
   color: #CBD5E1 !important;
+}
+.dashboard-dark .bg-slate-200\/60 {
+  background-color: rgba(51, 65, 85, 0.6) !important;
+}
+.dashboard-dark .bg-slate-800 {
+  background-color: #0F172A !important;
 }
 
 /* Wallet Payment Badges & Notice Boxes in Dark Mode */
@@ -155,6 +185,12 @@ body {
 }
 .dashboard-dark .border-amber-100 {
   border-color: rgba(245, 158, 11, 0.25) !important;
+}
+.dashboard-dark .bg-\[\#FEF2F2\] {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+.dashboard-dark .text-\[\#2563EB\] {
+  color: #60A5FA !important;
 }
 
 /* Shadows */

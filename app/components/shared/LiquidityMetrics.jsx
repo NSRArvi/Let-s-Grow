@@ -109,7 +109,7 @@ export default function LiquidityMetrics({ refreshTrigger = 0 }) {
                 </h2>
             </div>
 
-            <div className="bg-white p-5 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] bg-gradient-to-br from-white to-blue-50/30">
+            <div className="bg-white p-5 rounded-xl border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
                 <div className="flex items-center gap-2 mb-2">
                     <div className="bg-blue-50 p-2 rounded-lg">
                         <Wallet className="w-5 h-5 text-[#2563EB]" />

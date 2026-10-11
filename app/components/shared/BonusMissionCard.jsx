@@ -131,9 +131,9 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 animate-pulse">
-        <div className="h-6 w-48 bg-slate-200 rounded mb-4"></div>
-        <div className="h-4 w-72 bg-slate-100 rounded"></div>
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-[#E2E8F0] dark:border-slate-800 p-6 animate-pulse">
+        <div className="h-6 w-48 bg-slate-200 dark:bg-slate-800 rounded mb-4"></div>
+        <div className="h-4 w-72 bg-slate-100 dark:bg-slate-800/60 rounded"></div>
       </div>
     );
   }
@@ -141,26 +141,26 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
   // Already claimed state
   if (missionData.claimed) {
     return (
-      <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-2xl p-5 shadow-sm flex items-center justify-between flex-wrap gap-4">
+      <div className="bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-500/20 dark:border-emerald-500/30 rounded-2xl p-5 shadow-sm flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-6 h-6 text-emerald-500" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-[#0F172A] text-base">{t("bonusMission.claimedBanner", "Welcome Bonus Claimed (+$20.00)")}</span>
-              <span className="bg-emerald-500/20 text-emerald-600 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-emerald-500/30">
+              <span className="font-bold text-[#0F172A] dark:text-white text-base">{t("bonusMission.claimedBanner", "Welcome Bonus Claimed (+$20.00)")}</span>
+              <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-emerald-500/30">
                 {t("bonusMission.claimed", "+$20.00 Claimed")}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
               {t("bonusMission.claimedDesc", "Your $20.00 starter bonus was credited to your main wallet balance.")}
             </p>
           </div>
         </div>
         <Link
           href="/dashboard/wallet"
-          className="text-xs font-semibold text-emerald-600 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+          className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5"
         >
           {t("bonusMission.checkWallet", "Check Wallet")} <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -286,7 +286,7 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
 
   // Full 3-Step Detailed card (/dashboard/team)
   return (
-    <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_2px_12px_rgba(15,23,42,0.04)] overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-[#E2E8F0] dark:border-slate-800 shadow-[0_2px_12px_rgba(15,23,42,0.04)] overflow-hidden">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white p-6 sm:p-7 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
@@ -330,33 +330,33 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
       </div>
 
       {/* 3-Step Checklist Grid */}
-      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F8FAFC]">
+      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F8FAFC] dark:bg-slate-950/40">
         {/* Step 1 */}
         <div className={`p-4 rounded-xl border transition-all ${
           isStep1Complete 
-            ? "bg-[#ECFDF5] border-emerald-200" 
-            : "bg-white border-[#E2E8F0]"
+            ? "bg-[#ECFDF5] dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40" 
+            : "bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800"
         }`}>
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex items-center gap-2.5">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                isStep1Complete ? "bg-emerald-500 text-white" : "bg-blue-50 text-blue-600"
+                isStep1Complete ? "bg-emerald-500 text-white" : "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
               }`}>
                 {isStep1Complete ? <CheckCircle2 className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[#0F172A]">{t("bonusMission.step1Label", "Step 1: Your Investment")}</h4>
-                <p className="text-xs text-[#64748B]">Invest ≥ $40</p>
+                <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{t("bonusMission.step1Label", "Step 1: Your Investment")}</h4>
+                <p className="text-xs text-[#64748B] dark:text-slate-400">Invest ≥ $40</p>
               </div>
             </div>
             <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-              isStep1Complete ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-700"
+              isStep1Complete ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300" : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
             }`}>
               ${missionData.myInvested} / ${missionData.requiredMyInvest}
             </span>
           </div>
 
-          <div className="w-full h-2 bg-slate-200/60 rounded-full overflow-hidden mt-3">
+          <div className="w-full h-2 bg-slate-200/60 dark:bg-slate-800 rounded-full overflow-hidden mt-3">
             <div
               className={`h-full transition-all duration-500 ${isStep1Complete ? "bg-emerald-500" : "bg-blue-600"}`}
               style={{ width: `${Math.min(100, (missionData.myInvested / missionData.requiredMyInvest) * 100)}%` }}
@@ -367,29 +367,29 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
         {/* Step 2 */}
         <div className={`p-4 rounded-xl border transition-all ${
           isStep2Complete 
-            ? "bg-[#ECFDF5] border-emerald-200" 
-            : "bg-white border-[#E2E8F0]"
+            ? "bg-[#ECFDF5] dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40" 
+            : "bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800"
         }`}>
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex items-center gap-2.5">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                isStep2Complete ? "bg-emerald-500 text-white" : "bg-indigo-50 text-indigo-600"
+                isStep2Complete ? "bg-emerald-500 text-white" : "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"
               }`}>
                 {isStep2Complete ? <CheckCircle2 className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[#0F172A]">{t("bonusMission.step2Label", "Step 2: 2 Verified Members")}</h4>
-                <p className="text-xs text-[#64748B]">2 team members with KYC verified</p>
+                <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{t("bonusMission.step2Label", "Step 2: 2 Verified Members")}</h4>
+                <p className="text-xs text-[#64748B] dark:text-slate-400">2 team members with KYC verified</p>
               </div>
             </div>
             <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-              isStep2Complete ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-700"
+              isStep2Complete ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300" : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
             }`}>
               {missionData.verifiedMembersCount} / {missionData.requiredVerifiedMembers}
             </span>
           </div>
 
-          <div className="w-full h-2 bg-slate-200/60 rounded-full overflow-hidden mt-3">
+          <div className="w-full h-2 bg-slate-200/60 dark:bg-slate-800 rounded-full overflow-hidden mt-3">
             <div
               className={`h-full transition-all duration-500 ${isStep2Complete ? "bg-emerald-500" : "bg-indigo-600"}`}
               style={{ width: `${Math.min(100, (missionData.verifiedMembersCount / missionData.requiredVerifiedMembers) * 100)}%` }}
@@ -400,29 +400,29 @@ export default function BonusMissionCard({ onClaimed, compact = false }) {
         {/* Step 3 */}
         <div className={`p-4 rounded-xl border transition-all ${
           isStep3Complete 
-            ? "bg-[#ECFDF5] border-emerald-200" 
-            : "bg-white border-[#E2E8F0]"
+            ? "bg-[#ECFDF5] dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40" 
+            : "bg-white dark:bg-slate-900 border-[#E2E8F0] dark:border-slate-800"
         }`}>
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex items-center gap-2.5">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                isStep3Complete ? "bg-emerald-500 text-white" : "bg-purple-50 text-purple-600"
+                isStep3Complete ? "bg-emerald-500 text-white" : "bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400"
               }`}>
                 {isStep3Complete ? <CheckCircle2 className="w-4 h-4" /> : <Users className="w-4 h-4" />}
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[#0F172A]">{t("bonusMission.step3Label", "Step 3: Members $40 Invest")}</h4>
-                <p className="text-xs text-[#64748B]">{t("bonusMission.ruleNote", "2 verified members invest ≥ $40")}</p>
+                <h4 className="text-sm font-bold text-[#0F172A] dark:text-white">{t("bonusMission.step3Label", "Step 3: Members $40 Invest")}</h4>
+                <p className="text-xs text-[#64748B] dark:text-slate-400">{t("bonusMission.ruleNote", "2 verified members invest ≥ $40")}</p>
               </div>
             </div>
             <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-              isStep3Complete ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-700"
+              isStep3Complete ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300" : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
             }`}>
               {missionData.invested40MembersCount} / {missionData.requiredInvestedMembers}
             </span>
           </div>
 
-          <div className="w-full h-2 bg-slate-200/60 rounded-full overflow-hidden mt-3">
+          <div className="w-full h-2 bg-slate-200/60 dark:bg-slate-800 rounded-full overflow-hidden mt-3">
             <div
               className={`h-full transition-all duration-500 ${isStep3Complete ? "bg-emerald-500" : "bg-purple-600"}`}
               style={{ width: `${Math.min(100, (missionData.invested40MembersCount / missionData.requiredInvestedMembers) * 100)}%` }}

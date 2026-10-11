@@ -32,7 +32,7 @@ export function ThemeProvider({ children }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
-      <div className={theme === "dark" ? "dashboard-dark" : "dashboard-light"}>
+      <div className={theme === "dark" ? "dashboard-dark dark" : "dashboard-light"}>
         {children}
       </div>
     </ThemeContext.Provider>
